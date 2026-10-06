@@ -1059,295 +1059,807 @@ export default {
           const 终端页面 = `<!DOCTYPE html>
     <html lang="${语言值661}" dir="${是否值664 ? 'rtl' : 'ltr'}">
     <head>
+<script>(function(){try{var t=localStorage.getItem('cp-theme');if(t==='light'||t==='dark'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();</script>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>${翻译值659.title}</title>
-        <style>
-            :root {
-                --cp-bg: #05030e;
-                --cp-bg-2: #0a0820;
-                --cp-cyan: #00f0ff;
-                --cp-cyan-d: #00b8c4;
-                --cp-pink: #ff2bd6;
-                --cp-pink-d: #d1239f;
-                --cp-purple: #a347ff;
-                --cp-yellow: #fff200;
-                --cp-mint: #00ff9d;
-                --cp-red: #ff3860;
-                --cp-text: #e6f5ff;
-                --cp-text-dim: #7aa9c4;
-                --cp-border: rgba(0, 240, 255, 0.55);
-                --cp-grid: rgba(255, 43, 214, 0.16);
-            }
-            * { margin: 0; padding: 0; box-sizing: border-box; }
-            html, body { height: 100%; }
-            body {
-                font-family: "JetBrains Mono", "Fira Code", "Courier New", monospace;
-                background: radial-gradient(ellipse at 20% 10%, #2a0040 0%, var(--cp-bg) 55%, #000 100%);
-                color: var(--cp-text);
-                min-height: 100vh;
-                overflow-x: hidden;
-                position: relative;
-                display: flex; justify-content: center; align-items: center;
-            }
-            body::before {
-                content: ""; position: fixed; inset: 0;
-                background-image:
-                    linear-gradient(var(--cp-grid) 1px, transparent 1px),
-                    linear-gradient(90deg, var(--cp-grid) 1px, transparent 1px);
-                background-size: 48px 48px;
-                mask-image: radial-gradient(ellipse at center, #000 30%, transparent 80%);
-                z-index: -3;
-                animation: cp-grid-slide 18s linear infinite;
-            }
-            body::after {
-                content: ""; position: fixed; inset: 0;
-                background: repeating-linear-gradient(
-                    180deg,
-                    rgba(255,255,255,0.04) 0,
-                    rgba(255,255,255,0.04) 1px,
-                    transparent 1px,
-                    transparent 3px
-                );
-                pointer-events: none;
-                z-index: 5;
-                mix-blend-mode: overlay;
-                animation: cp-scan-flicker 6s infinite;
-            }
-            @keyframes cp-grid-slide {
-                0% { background-position: 0 0, 0 0; }
-                100% { background-position: 48px 48px, 48px 48px; }
-            }
-            @keyframes cp-scan-flicker {
-                0%, 100% { opacity: 0.6; }
-                50% { opacity: 0.9; }
-            }
-            .matrix-bg {
-                position: fixed; inset: 0;
-                background:
-                    radial-gradient(circle at 80% 90%, rgba(255,43,214,0.18) 0%, transparent 45%),
-                    radial-gradient(circle at 10% 80%, rgba(0,240,255,0.18) 0%, transparent 45%);
-                z-index: -2;
-                pointer-events: none;
-            }
-            .matrix-rain { display: none; }
-            .matrix-code-rain {
-                position: fixed; inset: 0;
-                pointer-events: none; z-index: -1;
-                overflow: hidden;
-            }
-            .matrix-column {
-                position: absolute; top: -120%; left: 0;
-                color: var(--cp-cyan);
-                font-family: "JetBrains Mono", "Courier New", monospace;
-                font-size: 14px; line-height: 1.25;
-                text-shadow: 0 0 6px var(--cp-cyan), 0 0 12px rgba(0,240,255,0.5);
-                animation: cp-drop linear infinite;
-            }
-            @keyframes cp-drop {
-                0%   { top: -120%; opacity: 0; }
-                10%  { opacity: 0.85; }
-                90%  { opacity: 0.4; }
-                100% { top: 110vh; opacity: 0; }
-            }
-            .matrix-column:nth-child(odd)  { animation-duration: 12s; }
-            .matrix-column:nth-child(even) { animation-duration: 18s; color: var(--cp-pink); text-shadow: 0 0 6px var(--cp-pink), 0 0 14px rgba(255,43,214,0.5); }
-            .matrix-column:nth-child(3n)   { animation-duration: 20s; color: var(--cp-purple); text-shadow: 0 0 6px var(--cp-purple); }
-            .matrix-column:nth-child(5n)   { animation-duration: 9s; opacity: 0.6; }
+<style>
+:root,
+[data-theme="dark"] {
+  --bg:         #0B1120;
+  --bg-2:       #0F172A;
+  --surface:    #131C2E;
+  --surface-2:  #1A2537;
+  --surface-3:  #223047;
+  --border:     #26344B;
+  --border-str: #33445F;
+  --text:       #E8EEF7;
+  --text-mut:   #97A6BC;
+  --text-dim:    #7E8FA6;
+  --accent:     #3B82F6;
+  --accent-2:   #2563EB;
+  --accent-soft:rgba(59,130,246,.14);
+  --ok:         #22C55E;
+  --ok-soft:    rgba(34,197,94,.14);
+  --warn:       #F59E0B;
+  --warn-soft:  rgba(245,158,11,.14);
+  --err:        #EF4444;
+  --err-soft:   rgba(239,68,68,.14);
+  --info:       #38BDF8;
+  --info-soft:  rgba(56,189,248,.14);
+  --shadow:     0 1px 2px rgba(0,0,0,.35), 0 8px 24px rgba(0,0,0,.28);
+  --shadow-lg:  0 16px 48px rgba(0,0,0,.45);
+  --glow:       radial-gradient(circle at 18% 8%, rgba(59,130,246,.18), transparent 46%),
+                radial-gradient(circle at 84% 92%, rgba(56,189,248,.12), transparent 46%);
+  --grid-line:  rgba(120,150,200,.055);
+}
+[data-theme="light"] {
+  --bg:         #F5F7FB;
+  --bg-2:       #EEF2F8;
+  --surface:    #FFFFFF;
+  --surface-2:  #F4F7FB;
+  --surface-3:  #E9EFF7;
+  --border:     #DCE3ED;
+  --border-str: #C3CEE0;
+  --text:       #0F1B2D;
+  --text-mut:   #4A5A72;
+  --text-dim:    #5D6E85;
+  --accent:     #2563EB;
+  --accent-2:   #1D4ED8;
+  --accent-soft:rgba(37,99,235,.10);
+  --ok:         #15803D;
+  --ok-soft:    rgba(21,128,61,.10);
+  --warn:       #B45309;
+  --warn-soft:  rgba(180,83,9,.10);
+  --err:        #DC2626;
+  --err-soft:   rgba(220,38,38,.10);
+  --info:       #0369A1;
+  --info-soft:  rgba(3,105,161,.10);
+  --shadow:     0 1px 2px rgba(15,27,45,.06), 0 8px 24px rgba(15,27,45,.08);
+  --shadow-lg:  0 16px 48px rgba(15,27,45,.14);
+  --glow:       radial-gradient(circle at 18% 8%, rgba(37,99,235,.10), transparent 46%),
+                radial-gradient(circle at 84% 92%, rgba(3,105,161,.08), transparent 46%);
+  --grid-line:  rgba(30,60,110,.05);
+}
 
-            .terminal {
-                width: 92%; max-width: 860px; height: 540px;
-                background:
-                    linear-gradient(180deg, rgba(8,4,28,0.92) 0%, rgba(15,3,40,0.92) 100%);
-                border: 1px solid var(--cp-border);
-                border-radius: 0;
-                box-shadow:
-                    0 0 0 1px rgba(255,43,214,0.25),
-                    0 0 28px rgba(0,240,255,0.35),
-                    0 0 80px rgba(255,43,214,0.18),
-                    inset 0 0 30px rgba(0,240,255,0.06);
-                clip-path: polygon(
-                    0 18px, 18px 0,
-                    calc(100% - 60px) 0, calc(100% - 42px) 18px,
-                    100% 18px, 100% calc(100% - 14px),
-                    calc(100% - 14px) 100%, 42px 100%,
-                    24px calc(100% - 14px), 0 calc(100% - 14px)
-                );
-                position: relative; z-index: 1;
-                overflow: hidden;
-            }
-            .terminal::before {
-                content: ""; position: absolute; inset: 0;
-                background: repeating-linear-gradient(180deg, rgba(0,240,255,0.06) 0 1px, transparent 1px 4px);
-                pointer-events: none;
-                animation: cp-scan-flicker 5s infinite;
-            }
-            .terminal-header {
-                background: linear-gradient(90deg, rgba(255,43,214,0.18), rgba(0,240,255,0.18));
-                padding: 12px 18px;
-                border-bottom: 1px solid rgba(0,240,255,0.5);
-                display: flex; align-items: center; gap: 16px;
-                position: relative;
-            }
-            .terminal-header::after {
-                content: ""; position: absolute; left: 18px; right: 18px; bottom: -1px;
-                height: 1px;
-                background: linear-gradient(90deg, transparent, var(--cp-pink), var(--cp-cyan), transparent);
-                animation: cp-scan-line 4s linear infinite;
-            }
-            @keyframes cp-scan-line {
-                0% { transform: translateX(-30%); opacity: 0.4; }
-                50% { opacity: 1; }
-                100% { transform: translateX(30%); opacity: 0.4; }
-            }
-            .terminal-buttons {
-                display: flex; gap: 8px;
-            }
-            .terminal-button {
-                width: 12px; height: 12px;
-                background: var(--cp-pink);
-                box-shadow: 0 0 8px var(--cp-pink);
-                border: none; transform: rotate(45deg);
-            }
-            .terminal-button:nth-child(2) { background: var(--cp-yellow); box-shadow: 0 0 8px var(--cp-yellow); }
-            .terminal-button:nth-child(3) { background: var(--cp-mint); box-shadow: 0 0 8px var(--cp-mint); }
-            .terminal-title {
-                color: var(--cp-cyan);
-                font-size: 13px; font-weight: 700;
-                letter-spacing: 0.25em;
-                text-transform: uppercase;
-                text-shadow: 0 0 6px var(--cp-cyan);
-            }
-            .terminal-title::before { content: "// "; color: var(--cp-pink); }
-            .terminal-body {
-                padding: 24px; height: calc(100% - 52px);
-                overflow-y: auto; font-size: 14px;
-                line-height: 1.6;
-                position: relative;
-            }
-            .terminal-body::-webkit-scrollbar { width: 6px; }
-            .terminal-body::-webkit-scrollbar-thumb {
-                background: linear-gradient(180deg, var(--cp-pink), var(--cp-cyan));
-            }
-            .terminal-line {
-                margin-bottom: 8px; display: flex; align-items: center; gap: 8px;
-                flex-wrap: wrap;
-            }
-            .terminal-prompt {
-                color: var(--cp-pink);
-                font-weight: 700;
-                text-shadow: 0 0 6px var(--cp-pink);
-                letter-spacing: 0.05em;
-            }
-            .terminal-prompt::before { content: "▍"; color: var(--cp-cyan); margin-right: 4px; }
-            .terminal-input {
-                background: transparent; border: none; outline: none;
-                color: var(--cp-cyan);
-                font-family: inherit;
-                font-size: 14px; flex: 1; min-width: 0;
-                caret-color: var(--cp-pink);
-                text-shadow: 0 0 4px var(--cp-cyan);
-            }
-            .terminal-input::placeholder { color: var(--cp-text-dim); opacity: 0.75; }
-            .terminal-cursor {
-                display: inline-block; width: 9px; height: 16px;
-                background: var(--cp-pink);
-                margin-left: 2px;
-                box-shadow: 0 0 8px var(--cp-pink);
-                animation: cp-blink 1s steps(2, end) infinite;
-            }
-            @keyframes cp-blink {
-                0%, 100% { opacity: 1; }
-                50% { opacity: 0; }
-            }
-            .terminal-output { color: var(--cp-cyan); margin: 4px 0; }
-            .terminal-error  { color: var(--cp-red); margin: 4px 0; text-shadow: 0 0 6px var(--cp-red); }
-            .terminal-success{ color: var(--cp-mint); margin: 4px 0; text-shadow: 0 0 6px var(--cp-mint); }
+/* --------------------------------------------------------------------------
+   Theme skin switcher (button injected by the build; see parts/theme_*.js)
+   -------------------------------------------------------------------------- */
+.cp-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-2);
+  color: var(--text-mut);
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: 550;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: background-color 180ms ease, border-color 180ms ease,
+    color 180ms ease;
+}
 
-            .cp-hud {
-                position: fixed; top: 18px; right: 22px;
-                color: var(--cp-cyan);
-                font-family: "JetBrains Mono", monospace;
-                font-size: 11px; letter-spacing: 0.2em;
-                text-transform: uppercase;
-                text-align: right;
-                opacity: 0.85;
-                z-index: 1000;
-            }
-            .cp-hud .cp-hud-label { color: var(--cp-pink); }
-            .cp-hud .cp-hud-line { display: block; }
-            .cp-lang-wrapper {
-                position: fixed; top: 18px; left: 22px; z-index: 1000;
-                display: flex; align-items: center; gap: 10px;
-            }
-            .cp-lang-tag {
-                color: var(--cp-pink); font-size: 11px;
-                letter-spacing: 0.25em; text-transform: uppercase;
-                text-shadow: 0 0 6px var(--cp-pink);
-            }
-            #languageSelector {
-                background: rgba(8,4,28,0.85);
-                border: 1px solid var(--cp-cyan);
-                color: var(--cp-cyan);
-                padding: 6px 12px;
-                font-family: inherit;
-                font-size: 12px;
-                cursor: pointer;
-                letter-spacing: 0.12em;
-                text-shadow: 0 0 6px var(--cp-cyan);
-                box-shadow: 0 0 12px rgba(0,240,255,0.35);
-                clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
-            }
-            #languageSelector option { background: var(--cp-bg-2); color: var(--cp-cyan); }
+.cp-theme-toggle:hover {
+  border-color: var(--accent);
+  background: var(--surface-3);
+  color: var(--text);
+}
 
-            /* FX toggle - 页面特效图形化开关 */
-            .cp-fx-toggle {
-                position: fixed; top: 68px; left: 22px; z-index: 1001;
-                background: rgba(8,4,28,0.85);
-                border: 1px solid var(--cp-mint);
-                color: var(--cp-mint);
-                padding: 6px 12px;
-                font-family: inherit;
-                font-size: 11px;
-                letter-spacing: 0.18em;
-                text-transform: uppercase;
-                cursor: pointer;
-                text-shadow: 0 0 6px var(--cp-mint);
-                box-shadow: 0 0 10px rgba(0,255,157,0.35);
-                clip-path: polygon(7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%, 0 7px);
-                transition: all 0.2s ease;
-                display: inline-flex; align-items: center; gap: 6px;
-            }
-            .cp-fx-toggle:hover { color: var(--cp-pink); border-color: var(--cp-pink); text-shadow: 0 0 8px var(--cp-pink); box-shadow: 0 0 16px rgba(255,43,214,0.55); }
-            .cp-fx-toggle .cp-fx-dot { width: 6px; height: 6px; background: var(--cp-mint); border-radius: 50%; box-shadow: 0 0 8px var(--cp-mint); transition: all 0.2s; }
-            body.fx-off .cp-fx-toggle { color: var(--cp-text-dim); border-color: var(--cp-text-dim); text-shadow: none; box-shadow: none; }
-            body.fx-off .cp-fx-toggle .cp-fx-dot { background: transparent; border: 1px solid var(--cp-text-dim); box-shadow: none; }
-            body.fx-off .matrix-bg,
-            body.fx-off .matrix-code-rain,
-            body.fx-off .matrix-column { display: none !important; }
-            body.fx-off::before,
-            body.fx-off::after { display: none !important; content: none !important; }
-            body.fx-off { background: var(--cp-bg) !important; }
-            body.fx-off * {
-                animation: none !important;
-                transition: color 0.15s, background-color 0.15s, border-color 0.15s, box-shadow 0.15s !important;
-            }
-            body.fx-off .cp-glitch::before,
-            body.fx-off .cp-glitch::after { display: none !important; }
-            body.fx-off .terminal-cursor::after { animation: none !important; }
+.cp-theme-toggle:active {
+  background: var(--surface-3);
+}
 
-            .cp-glitch {
-                font-family: "JetBrains Mono", monospace;
-                font-weight: 700;
-                letter-spacing: 0.18em;
-                text-transform: uppercase;
-                color: var(--cp-cyan);
-                text-shadow:
-                    0 0 8px var(--cp-cyan),
-                    -2px 0 var(--cp-pink),
-                    2px 0 var(--cp-mint);
-            }
-        </style>
+.cp-theme-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.cp-theme-icon {
+  flex: 0 0 auto;
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* dark shows the moon, light shows the sun */
+.cp-theme-toggle[data-current="dark"] .cp-theme-icon-sun,
+.cp-theme-toggle:not([data-current]) .cp-theme-icon-sun {
+  display: none;
+}
+
+.cp-theme-toggle[data-current="light"] .cp-theme-icon-moon {
+  display: none;
+}
+
+.cp-theme-toggle[data-current="light"] {
+  color: var(--text);
+}
+
+#cpThemeLabel {
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   terminal.css - Terminal / login landing page
+   Tokens come from _tokens.css (dark-first, dual theme via data-theme).
+   No :root block. No neon glow, no clip-path, no text-shadow glow,
+   no uppercase body copy. Monospace only for terminal data.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Reset / base
+   -------------------------------------------------------------------------- */
+
+* {
+  box-sizing: border-box;
+}
+
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  padding: 64px 24px 48px;
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 48px 48px, 48px 48px;
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Decorative page-level washes, removed when FX are off. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  pointer-events: none;
+  background-image: var(--glow);
+  opacity: 0.9;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  z-index: -3;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, var(--border-str), transparent);
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 180ms ease;
+}
+
+a:hover {
+  color: var(--accent-2);
+  text-decoration: underline;
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   2. Decorative background layers
+   -------------------------------------------------------------------------- */
+
+.matrix-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background-image: var(--glow);
+  opacity: 0.75;
+}
+
+#matrixCodeRain,
+.matrix-code-rain {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0.04;
+}
+
+.matrix-column {
+  position: absolute;
+  top: -20%;
+  margin: 0;
+  padding: 0;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  line-height: 1.5;
+  color: var(--text-dim);
+  white-space: pre;
+  opacity: 0.5;
+  filter: blur(0.2px);
+  animation: matrix-fall 14s linear infinite;
+}
+
+@keyframes matrix-fall {
+  from {
+    transform: translateY(-8%);
+  }
+  to {
+    transform: translateY(18%);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   3. Fixed HUD chrome - language, FX toggle, status readout
+   -------------------------------------------------------------------------- */
+
+.cp-lang-wrapper {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.cp-lang-tag {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  padding-left: 4px;
+}
+
+#languageSelector {
+  appearance: none;
+  -webkit-appearance: none;
+  min-width: 108px;
+  padding: 6px 26px 6px 10px;
+  border: 1px solid var(--border-str);
+  border-radius: 8px;
+  background-color: var(--surface-2);
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--text-mut) 50%),
+    linear-gradient(135deg, var(--text-mut) 50%, transparent 50%);
+  background-position: right 14px center, right 9px center;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color 180ms ease, background-color 180ms ease;
+}
+
+#languageSelector:hover {
+  border-color: var(--accent);
+}
+
+#languageSelector:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+#languageSelector option {
+  background: var(--surface);
+  color: var(--text);
+  font-size: 13px;
+}
+
+.cp-fx-toggle {
+  position: fixed;
+  top: 66px;
+  left: 16px;
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text-mut);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease;
+}
+
+.cp-fx-toggle:hover {
+  border-color: var(--accent);
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.cp-fx-toggle:active {
+  background: var(--surface-3);
+}
+
+.cp-fx-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+#cpFxLabel {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.cp-fx-dot {
+  width: 8px;
+  height: 8px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--ok);
+  box-shadow: 0 0 0 3px var(--ok-soft);
+  transition: background-color 180ms ease, box-shadow 180ms ease;
+}
+
+body.fx-off .cp-fx-toggle {
+  color: var(--text-dim);
+  border-color: var(--border);
+  background: var(--surface-2);
+}
+
+body.fx-off .cp-fx-toggle .cp-fx-dot {
+  background: var(--text-dim);
+  box-shadow: 0 0 0 3px rgba(107, 124, 148, 0.16);
+}
+
+.cp-hud {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 40;
+  min-width: 188px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  text-align: right;
+}
+
+.cp-hud-line {
+  display: block;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  line-height: 1.8;
+  color: var(--text-mut);
+  white-space: nowrap;
+}
+
+.cp-hud-label {
+  display: inline-block;
+  margin-right: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* --------------------------------------------------------------------------
+   4. Terminal card
+   -------------------------------------------------------------------------- */
+
+.terminal {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 860px;
+  margin: 48px auto 0;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+.terminal-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+}
+
+.terminal-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.terminal-button {
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  background: var(--surface-3);
+  cursor: default;
+  transition: background-color 180ms ease, border-color 180ms ease;
+}
+
+.terminal-button:nth-child(1) {
+  background: var(--err);
+  border-color: rgba(239, 68, 68, 0.35);
+}
+
+.terminal-button:nth-child(2) {
+  background: var(--warn);
+  border-color: rgba(245, 158, 11, 0.35);
+}
+
+.terminal-button:nth-child(3) {
+  background: var(--ok);
+  border-color: rgba(34, 197, 94, 0.35);
+}
+
+.terminal-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--text);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Legacy class name kept in markup - now a clean modern title. */
+.cp-glitch {
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-transform: none;
+  text-shadow: none;
+  animation: none;
+}
+
+.terminal-body,
+#terminalBody {
+  max-height: min(62vh, 560px);
+  padding: var(--sp-6, 24px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 13.5px;
+  line-height: 1.75;
+  color: var(--text-mut);
+  background: var(--surface);
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-str) transparent;
+  transition: border-color 180ms ease;
+}
+
+.terminal-body::-webkit-scrollbar,
+#terminalBody::-webkit-scrollbar {
+  width: 8px;
+}
+
+.terminal-body::-webkit-scrollbar-track,
+#terminalBody::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.terminal-body::-webkit-scrollbar-thumb,
+#terminalBody::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+  background-color: var(--border-str);
+}
+
+.terminal-body::-webkit-scrollbar-thumb:hover,
+#terminalBody::-webkit-scrollbar-thumb:hover {
+  background-color: var(--text-dim);
+}
+
+.terminal-line {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 4px;
+  min-height: 1.75em;
+}
+
+.terminal-prompt {
+  flex: 0 0 auto;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--accent);
+  text-shadow: none;
+  user-select: none;
+}
+
+.terminal-input {
+  flex: 1 1 240px;
+  min-width: 0;
+  min-height: 40px;
+  padding: 8px 0;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  background: transparent;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 13.5px;
+  line-height: 1.7;
+  caret-color: var(--accent);
+  outline: none;
+  transition: border-color 180ms ease;
+}
+
+.terminal-input:focus,
+.terminal-input:focus-visible,
+#uuidInput:focus,
+#uuidInput:focus-visible {
+  border-bottom-color: var(--accent);
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.terminal-input::placeholder,
+#uuidInput::placeholder {
+  color: var(--text-dim);
+  opacity: 1;
+}
+
+.terminal-cursor {
+  display: inline-block;
+  width: 8px;
+  height: 1.05em;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  background: var(--accent);
+  opacity: 0.9;
+  animation: terminal-blink 1.1s steps(1, end) infinite;
+}
+
+@keyframes terminal-blink {
+  0%,
+  49% {
+    opacity: 0.9;
+  }
+  50%,
+  100% {
+    opacity: 0.12;
+  }
+}
+
+.terminal-output {
+  color: var(--text-mut);
+}
+
+.terminal-error {
+  color: var(--err);
+}
+
+.terminal-success {
+  color: var(--ok);
+}
+
+/* --------------------------------------------------------------------------
+   5. FX-off state
+   -------------------------------------------------------------------------- */
+
+body.fx-off .matrix-bg,
+body.fx-off .matrix-code-rain,
+body.fx-off #matrixCodeRain,
+body.fx-off .matrix-column {
+  display: none;
+}
+
+body.fx-off * {
+  animation: none !important;
+  transition: none !important;
+}
+
+body.fx-off::before,
+body.fx-off::after {
+  content: none;
+  display: none;
+}
+
+/* --------------------------------------------------------------------------
+   6. Responsive
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 720px) {
+  body {
+    padding: 92px 12px 32px;
+    background-size: 32px 32px, 32px 32px;
+  }
+
+  .cp-lang-wrapper {
+    top: 12px;
+    left: 12px;
+    padding: 5px 6px;
+    gap: 6px;
+  }
+
+  .cp-fx-toggle {
+    top: 60px;
+    left: 12px;
+    padding: 6px 10px;
+  }
+
+  .cp-hud {
+    top: auto;
+    right: 12px;
+    left: 12px;
+    bottom: 12px;
+    min-width: 0;
+    padding: 8px 12px;
+    text-align: left;
+  }
+
+  .cp-hud-line {
+    white-space: normal;
+  }
+
+  .cp-hud-label {
+    margin-right: 4px;
+  }
+
+  .terminal {
+    margin-top: 20px;
+    border-radius: 12px;
+  }
+
+  .terminal-header {
+    padding: 10px 12px;
+  }
+
+  .terminal-title,
+  .cp-glitch {
+    font-size: 12px;
+  }
+
+  .terminal-body {
+    max-height: none;
+    padding: 16px;
+    font-size: 13px;
+  }
+
+  .terminal-line {
+    gap: 6px;
+  }
+
+  .terminal-input {
+    flex: 1 1 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .matrix-column,
+  .terminal-cursor,
+  body::before,
+  body::after {
+    animation: none !important;
+  }
+}
+/* --------------------------------------------------------------------------
+   Legacy neon remap
+   The matrix-rain script writes hard-coded neon colours straight into inline
+   style attributes (colour + glow). Remap them onto design tokens so the
+   palette stays coherent without touching any page logic. The inline
+   '#ffffff' highlight flash is deliberately left untouched.
+   -------------------------------------------------------------------------- */
+[style*="#00f0ff"], [style*="rgb(0, 240, 255)"],
+[style*="#00aaff"], [style*="rgb(0, 170, 255)"] {
+  color: var(--accent) !important;
+}
+
+[style*="#00ff9d"], [style*="rgb(0, 255, 157)"] {
+  color: var(--ok) !important;
+}
+
+[style*="#ffb400"], [style*="rgb(255, 180, 0)"] {
+  color: var(--warn) !important;
+}
+
+[style*="#ff2bd6"], [style*="rgb(255, 43, 214)"],
+[style*="#a347ff"], [style*="rgb(163, 71, 255)"],
+[style*="#fff200"], [style*="rgb(255, 242, 0)"] {
+  color: var(--accent) !important;
+}
+
+.matrix-column span {
+  text-shadow: none !important;
+}
+
+
+@media (max-width: 720px) {
+  .terminal-input {
+    min-height: 44px;
+    padding: 10px 0;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Theme skin switcher — fixed pill stacked under the FX toggle
+   -------------------------------------------------------------------------- */
+#cpThemeToggle {
+  position: fixed;
+  top: 110px;
+  left: 16px;
+  z-index: 40;
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  font-size: 12px;
+}
+
+@media (max-width: 720px) {
+  #cpThemeToggle {
+    top: 106px;
+  }
+}
+</style>
     </head>
     <body>
         <div class="matrix-bg"></div>
@@ -1368,6 +1880,16 @@ export default {
                 <span class="cp-fx-dot" aria-hidden="true"></span>
                 <span id="cpFxLabel">FX: ON</span>
             </button>
+<button type="button" id="cpThemeToggle" class="cp-theme-toggle" data-current="dark" title="切换主题皮肤" aria-label="切换主题皮肤">
+                    <svg class="cp-theme-icon cp-theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M20.2 14.6A8.3 8.3 0 0 1 9.4 3.8a8.5 8.5 0 1 0 10.8 10.8Z"/>
+                    </svg>
+                    <svg class="cp-theme-icon cp-theme-icon-sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <circle cx="12" cy="12" r="4.1"/>
+                        <path d="M12 2.4v2.3M12 19.3v2.3M4.2 4.2l1.7 1.7M18.1 18.1l1.7 1.7M2.4 12h2.3M19.3 12h2.3M4.2 19.8l1.7-1.7M18.1 5.9l1.7-1.7"/>
+                    </svg>
+                    <span id="cpThemeLabel">深色</span>
+                </button>
         <div class="terminal">
             <div class="terminal-header">
                 <div class="terminal-buttons">
@@ -1597,6 +2119,65 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 });
+</script>
+<script>
+/* Theme skin switcher — purely additive. Persists to localStorage['cp-theme']
+   and reflects the choice on <html data-theme="dark|light">. The page's own
+   logic is untouched. */
+(function () {
+    var KEY = 'cp-theme';
+    var 根 = document.documentElement;
+
+    function 读取() {
+        try {
+            var t = localStorage.getItem(KEY);
+            if (t === 'light' || t === 'dark') return t;
+        } catch (e) {}
+        return 'dark';
+    }
+
+    function 是否波斯() {
+        return (根.getAttribute('lang') || '').toLowerCase().indexOf('fa') === 0;
+    }
+
+    function 应用(主题) {
+        根.setAttribute('data-theme', 主题);
+        var 按钮 = document.getElementById('cpThemeToggle');
+        if (!按钮) return;
+        按钮.setAttribute('data-current', 主题);
+        var 波斯 = 是否波斯();
+        var 名称 = 主题 === 'light' ? (波斯 ? 'روشن' : '浅色') : (波斯 ? 'تیره' : '深色');
+        var 提示 = (波斯 ? 'تغییر پوسته' : '切换主题皮肤') + ' — ' + 名称;
+        var 文字 = document.getElementById('cpThemeLabel');
+        if (文字) 文字.textContent = 名称;
+        按钮.setAttribute('title', 提示);
+        按钮.setAttribute('aria-label', 提示);
+    }
+
+    function 切换() {
+        var 下一个 = 根.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        try { localStorage.setItem(KEY, 下一个); } catch (e) {}
+        应用(下一个);
+    }
+
+    window.切换主题皮肤 = 切换;
+    window.应用主题皮肤 = 应用;
+
+    function 绑定() {
+        var 按钮 = document.getElementById('cpThemeToggle');
+        if (按钮 && !按钮.getAttribute('data-cp-theme-bound')) {
+            按钮.setAttribute('data-cp-theme-bound', '1');
+            按钮.addEventListener('click', 切换);
+        }
+        应用(读取());
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', 绑定);
+    } else {
+        绑定();
+    }
+})();
 </script>
     </body>
     </html>`;
@@ -4576,932 +5157,1997 @@ async function 处理订阅值(请求241, 用户240 = null) {
   const 值页面 = `<!DOCTYPE html>
     <html lang="${语言值}" dir="${是否值236 ? 'rtl' : 'ltr'}">
     <head>
+<script>(function(){try{var t=localStorage.getItem('cp-theme');if(t==='light'||t==='dark'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();</script>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>${翻译值.title}</title>
-        <style>
-            :root {
-                --cp-bg: #05030e;
-                --cp-bg-2: #0a0820;
-                --cp-bg-3: #110835;
-                --cp-cyan: #00f0ff;
-                --cp-cyan-d: #00b8c4;
-                --cp-pink: #ff2bd6;
-                --cp-pink-d: #d1239f;
-                --cp-purple: #a347ff;
-                --cp-yellow: #fff200;
-                --cp-mint: #00ff9d;
-                --cp-amber: #ffb400;
-                --cp-red: #ff3860;
-                --cp-text: #e6f5ff;
-                --cp-text-dim: #7aa9c4;
-                --cp-border: rgba(0, 240, 255, 0.55);
-                --cp-border-pink: rgba(255, 43, 214, 0.55);
-                --cp-grid: rgba(255, 43, 214, 0.16);
-            }
-            * { margin: 0; padding: 0; box-sizing: border-box; }
-            html, body { min-height: 100%; }
-            body {
-                font-family: "JetBrains Mono", "Fira Code", "Courier New", monospace;
-                background: radial-gradient(ellipse at 80% -10%, #2a0040 0%, var(--cp-bg) 50%, #000 100%);
-                color: var(--cp-text);
-                min-height: 100vh;
-                overflow-x: hidden;
-                position: relative;
-            }
-            body::before {
-                content: ""; position: fixed; inset: 0;
-                background-image:
-                    linear-gradient(var(--cp-grid) 1px, transparent 1px),
-                    linear-gradient(90deg, var(--cp-grid) 1px, transparent 1px);
-                background-size: 48px 48px;
-                mask-image: radial-gradient(ellipse at center, #000 30%, transparent 85%);
-                z-index: -3;
-                animation: cp-grid-slide 22s linear infinite;
-                pointer-events: none;
-            }
-            body::after {
-                content: ""; position: fixed; inset: 0;
-                background: repeating-linear-gradient(
-                    180deg,
-                    rgba(255,255,255,0.035) 0,
-                    rgba(255,255,255,0.035) 1px,
-                    transparent 1px,
-                    transparent 3px
-                );
-                pointer-events: none;
-                z-index: 6;
-                mix-blend-mode: overlay;
-                animation: cp-scan-flicker 6s infinite;
-            }
-            @keyframes cp-grid-slide {
-                0% { background-position: 0 0, 0 0; }
-                100% { background-position: 48px 48px, 48px 48px; }
-            }
-            @keyframes cp-scan-flicker {
-                0%, 100% { opacity: 0.55; }
-                50% { opacity: 0.85; }
-            }
-            .matrix-bg {
-                position: fixed; inset: 0;
-                background:
-                    radial-gradient(circle at 85% 15%, rgba(255,43,214,0.18) 0%, transparent 45%),
-                    radial-gradient(circle at 10% 85%, rgba(0,240,255,0.18) 0%, transparent 45%),
-                    radial-gradient(circle at 55% 50%, rgba(163,71,255,0.10) 0%, transparent 60%);
-                z-index: -2;
-                pointer-events: none;
-            }
-            .matrix-rain { display: none; }
-            .matrix-code-rain {
-                position: fixed; inset: 0;
-                pointer-events: none; z-index: -1;
-                overflow: hidden;
-            }
-            .matrix-column {
-                position: absolute; top: -120%; left: 0;
-                color: var(--cp-cyan);
-                font-family: "JetBrains Mono", "Courier New", monospace;
-                font-size: 14px; line-height: 1.25;
-                text-shadow: 0 0 6px var(--cp-cyan), 0 0 12px rgba(0,240,255,0.5);
-                animation: cp-drop linear infinite;
-            }
-            @keyframes cp-drop {
-                0%   { top: -120%; opacity: 0; }
-                10%  { opacity: 0.85; }
-                90%  { opacity: 0.4; }
-                100% { top: 110vh; opacity: 0; }
-            }
-            .matrix-column:nth-child(odd)  { animation-duration: 12s; }
-            .matrix-column:nth-child(even) { animation-duration: 18s; color: var(--cp-pink); text-shadow: 0 0 6px var(--cp-pink), 0 0 14px rgba(255,43,214,0.5); }
-            .matrix-column:nth-child(3n)   { animation-duration: 20s; color: var(--cp-purple); text-shadow: 0 0 6px var(--cp-purple); }
-            .matrix-column:nth-child(5n)   { animation-duration: 9s; opacity: 0.6; }
+<style>
+:root,
+[data-theme="dark"] {
+  --bg:         #0B1120;
+  --bg-2:       #0F172A;
+  --surface:    #131C2E;
+  --surface-2:  #1A2537;
+  --surface-3:  #223047;
+  --border:     #26344B;
+  --border-str: #33445F;
+  --text:       #E8EEF7;
+  --text-mut:   #97A6BC;
+  --text-dim:    #7E8FA6;
+  --accent:     #3B82F6;
+  --accent-2:   #2563EB;
+  --accent-soft:rgba(59,130,246,.14);
+  --ok:         #22C55E;
+  --ok-soft:    rgba(34,197,94,.14);
+  --warn:       #F59E0B;
+  --warn-soft:  rgba(245,158,11,.14);
+  --err:        #EF4444;
+  --err-soft:   rgba(239,68,68,.14);
+  --info:       #38BDF8;
+  --info-soft:  rgba(56,189,248,.14);
+  --shadow:     0 1px 2px rgba(0,0,0,.35), 0 8px 24px rgba(0,0,0,.28);
+  --shadow-lg:  0 16px 48px rgba(0,0,0,.45);
+  --glow:       radial-gradient(circle at 18% 8%, rgba(59,130,246,.18), transparent 46%),
+                radial-gradient(circle at 84% 92%, rgba(56,189,248,.12), transparent 46%);
+  --grid-line:  rgba(120,150,200,.055);
+}
+[data-theme="light"] {
+  --bg:         #F5F7FB;
+  --bg-2:       #EEF2F8;
+  --surface:    #FFFFFF;
+  --surface-2:  #F4F7FB;
+  --surface-3:  #E9EFF7;
+  --border:     #DCE3ED;
+  --border-str: #C3CEE0;
+  --text:       #0F1B2D;
+  --text-mut:   #4A5A72;
+  --text-dim:    #5D6E85;
+  --accent:     #2563EB;
+  --accent-2:   #1D4ED8;
+  --accent-soft:rgba(37,99,235,.10);
+  --ok:         #15803D;
+  --ok-soft:    rgba(21,128,61,.10);
+  --warn:       #B45309;
+  --warn-soft:  rgba(180,83,9,.10);
+  --err:        #DC2626;
+  --err-soft:   rgba(220,38,38,.10);
+  --info:       #0369A1;
+  --info-soft:  rgba(3,105,161,.10);
+  --shadow:     0 1px 2px rgba(15,27,45,.06), 0 8px 24px rgba(15,27,45,.08);
+  --shadow-lg:  0 16px 48px rgba(15,27,45,.14);
+  --glow:       radial-gradient(circle at 18% 8%, rgba(37,99,235,.10), transparent 46%),
+                radial-gradient(circle at 84% 92%, rgba(3,105,161,.08), transparent 46%);
+  --grid-line:  rgba(30,60,110,.05);
+}
 
-            ::selection { background: var(--cp-pink); color: var(--cp-bg); }
+/* --------------------------------------------------------------------------
+   Theme skin switcher (button injected by the build; see parts/theme_*.js)
+   -------------------------------------------------------------------------- */
+.cp-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-2);
+  color: var(--text-mut);
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: 550;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: background-color 180ms ease, border-color 180ms ease,
+    color 180ms ease;
+}
 
-            .container {
-                max-width: 1180px;
-                margin: 0 auto;
-                padding: 110px 24px 60px;
-                position: relative;
-                z-index: 1;
-            }
-            .header {
-                text-align: center;
-                margin-bottom: 36px;
-                padding: 28px 24px;
-                position: relative;
-                border: 1px solid var(--cp-border);
-                background: linear-gradient(135deg, rgba(15,3,40,0.6), rgba(40,5,70,0.45));
-                clip-path: polygon(
-                    0 14px, 14px 0,
-                    calc(100% - 80px) 0, calc(100% - 60px) 14px,
-                    100% 14px, 100% calc(100% - 14px),
-                    calc(100% - 14px) 100%, 80px 100%,
-                    60px calc(100% - 14px), 0 calc(100% - 14px)
-                );
-                box-shadow: 0 0 30px rgba(0,240,255,0.25), 0 0 60px rgba(255,43,214,0.18);
-            }
-            .header::before {
-                content: "// SYS_ID / CFNEW / NIGHTCITY.NET";
-                position: absolute; top: 8px; left: 24px;
-                font-size: 10px; letter-spacing: 0.35em;
-                color: var(--cp-pink);
-                text-shadow: 0 0 6px var(--cp-pink);
-            }
-            .header::after {
-                content: "STATUS // ONLINE";
-                position: absolute; top: 8px; right: 24px;
-                font-size: 10px; letter-spacing: 0.35em;
-                color: var(--cp-mint);
-                text-shadow: 0 0 6px var(--cp-mint);
-            }
-            .title {
-                font-size: clamp(2.2rem, 5vw, 3.4rem);
-                font-weight: 800;
-                margin: 14px 0 8px;
-                color: var(--cp-cyan);
-                letter-spacing: 0.08em;
-                text-transform: uppercase;
-                text-shadow:
-                    0 0 12px var(--cp-cyan),
-                    0 0 28px rgba(0,240,255,0.5),
-                    -2px 0 var(--cp-pink),
-                    2px 0 var(--cp-mint);
-                position: relative;
-                animation: cp-title-flicker 6s infinite;
-            }
-            @keyframes cp-title-flicker {
-                0%, 92%, 100% { opacity: 1; }
-                94%, 96% { opacity: 0.65; }
-            }
-            .subtitle {
-                color: var(--cp-text-dim);
-                margin-bottom: 0;
-                font-size: 0.95rem;
-                letter-spacing: 0.25em;
-                text-transform: uppercase;
-            }
-            .subtitle::before { content: "▸ "; color: var(--cp-pink); }
+.cp-theme-toggle:hover {
+  border-color: var(--accent);
+  background: var(--surface-3);
+  color: var(--text);
+}
 
-            .card {
-                background:
-                    linear-gradient(180deg, rgba(8,4,28,0.85) 0%, rgba(15,3,40,0.78) 100%);
-                border: 1px solid var(--cp-border);
-                border-radius: 0;
-                padding: 26px 28px 28px;
-                margin-bottom: 22px;
-                position: relative;
-                backdrop-filter: blur(8px);
-                width: 100%;
-                box-shadow:
-                    0 0 0 1px rgba(255,43,214,0.18),
-                    0 0 22px rgba(0,240,255,0.18),
-                    0 0 60px rgba(255,43,214,0.06),
-                    inset 0 0 24px rgba(0,240,255,0.05);
-                clip-path: polygon(
-                    0 16px, 16px 0,
-                    calc(100% - 56px) 0, calc(100% - 40px) 16px,
-                    100% 16px, 100% calc(100% - 14px),
-                    calc(100% - 14px) 100%, 40px 100%,
-                    24px calc(100% - 14px), 0 calc(100% - 14px)
-                );
-            }
-            .card::after {
-                content: ""; position: absolute; top: 0; left: 0; right: 0;
-                height: 1px;
-                background: linear-gradient(90deg, transparent, var(--cp-pink), var(--cp-cyan), transparent);
-                opacity: 0.7;
-            }
-            .card-title {
-                font-size: 1.1rem;
-                margin: 0 0 20px;
-                color: var(--cp-cyan);
-                letter-spacing: 0.25em;
-                text-transform: uppercase;
-                text-shadow: 0 0 8px var(--cp-cyan);
-                display: flex; align-items: center; gap: 12px;
-                font-weight: 700;
-            }
-            .card-title::before {
-                content: ""; display: inline-block;
-                width: 14px; height: 14px;
-                background: var(--cp-pink);
-                box-shadow: 0 0 10px var(--cp-pink);
-                transform: rotate(45deg);
-            }
-            .card-title::after {
-                content: ""; flex: 1; height: 1px;
-                background: linear-gradient(90deg, var(--cp-cyan), transparent);
-                margin-left: 6px;
-            }
-            h3, h4 {
-                color: var(--cp-cyan);
-                letter-spacing: 0.18em;
-                text-transform: uppercase;
-                text-shadow: 0 0 6px var(--cp-cyan);
-                font-weight: 700;
-            }
+.cp-theme-toggle:active {
+  background: var(--surface-3);
+}
 
-            .client-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-                gap: 14px;
-                margin: 12px 0 18px;
-            }
-            .client-btn {
-                background: linear-gradient(135deg, rgba(0,240,255,0.08), rgba(255,43,214,0.08));
-                border: 1px solid var(--cp-border);
-                padding: 14px 18px;
-                color: var(--cp-cyan);
-                font-family: inherit;
-                font-weight: 700;
-                font-size: 0.85rem;
-                letter-spacing: 0.18em;
-                text-transform: uppercase;
-                cursor: pointer;
-                transition: all 0.3s ease;
-                text-align: center;
-                position: relative;
-                overflow: hidden;
-                text-shadow: 0 0 6px var(--cp-cyan);
-                clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
-            }
-            .client-btn::before {
-                content: ""; position: absolute; inset: 0; left: -100%;
-                background: linear-gradient(90deg, transparent, rgba(0,240,255,0.35), transparent);
-                transition: left 0.6s ease;
-            }
-            .client-btn:hover::before { left: 100%; }
-            .client-btn:hover {
-                color: var(--cp-pink);
-                border-color: var(--cp-pink);
-                background: linear-gradient(135deg, rgba(255,43,214,0.18), rgba(0,240,255,0.10));
-                box-shadow: 0 0 14px rgba(255,43,214,0.55), 0 0 28px rgba(0,240,255,0.30);
-                transform: translateY(-2px);
-                text-shadow: 0 0 8px var(--cp-pink);
-            }
+.cp-theme-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
 
-            #clientSubscriptionUrl,
-            .subscription-url,
-            [class*='subscription-url'],
-            [class*='c3Vic2NyaXB0aW9u'] {
-                background: rgba(0,0,0,0.7) !important;
-                border: 1px dashed var(--cp-pink) !important;
-                padding: 14px 16px !important;
-                word-break: break-all;
-                font-family: inherit;
-                color: var(--cp-mint) !important;
-                margin-top: 18px;
-                box-shadow: inset 0 0 12px rgba(255,43,214,0.18), 0 0 18px rgba(0,255,157,0.18) !important;
-                position: relative;
-                overflow-wrap: break-word;
-                overflow-x: auto;
-                max-width: 100%;
-                font-size: 0.85rem;
-                line-height: 1.6;
-                text-shadow: 0 0 6px var(--cp-mint);
-            }
-            #clientSubscriptionUrl:empty { display: none !important; }
+.cp-theme-icon {
+  flex: 0 0 auto;
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
 
-            .cp-hud {
-                position: fixed; top: 18px; right: 22px;
-                color: var(--cp-cyan);
-                font-family: "JetBrains Mono", monospace;
-                font-size: 11px; letter-spacing: 0.2em;
-                text-transform: uppercase;
-                text-align: right;
-                opacity: 0.85;
-                z-index: 1000;
-            }
-            .cp-hud .cp-hud-label { color: var(--cp-pink); }
-            .cp-hud .cp-hud-line { display: block; }
-            .cp-lang-wrapper {
-                position: fixed; top: 18px; left: 22px; z-index: 1000;
-                display: flex; align-items: center; gap: 10px;
-            }
-            .cp-lang-tag {
-                color: var(--cp-pink); font-size: 11px;
-                letter-spacing: 0.25em; text-transform: uppercase;
-                text-shadow: 0 0 6px var(--cp-pink);
-            }
-            #languageSelector {
-                background: rgba(8,4,28,0.85);
-                border: 1px solid var(--cp-cyan);
-                color: var(--cp-cyan);
-                padding: 6px 12px;
-                font-family: inherit;
-                font-size: 12px;
-                cursor: pointer;
-                letter-spacing: 0.12em;
-                text-shadow: 0 0 6px var(--cp-cyan);
-                box-shadow: 0 0 12px rgba(0,240,255,0.35);
-                clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
-            }
-            #languageSelector option { background: var(--cp-bg-2); color: var(--cp-cyan); }
+/* dark shows the moon, light shows the sun */
+.cp-theme-toggle[data-current="dark"] .cp-theme-icon-sun,
+.cp-theme-toggle:not([data-current]) .cp-theme-icon-sun {
+  display: none;
+}
 
-            /* FX toggle - 页面特效图形化开关 */
-            .cp-fx-toggle {
-                position: fixed; top: 68px; left: 22px; z-index: 1001;
-                background: rgba(8,4,28,0.85);
-                border: 1px solid var(--cp-mint);
-                color: var(--cp-mint);
-                padding: 6px 12px;
-                font-family: inherit;
-                font-size: 11px;
-                letter-spacing: 0.18em;
-                text-transform: uppercase;
-                cursor: pointer;
-                text-shadow: 0 0 6px var(--cp-mint);
-                box-shadow: 0 0 10px rgba(0,255,157,0.35);
-                clip-path: polygon(7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%, 0 7px);
-                transition: all 0.2s ease;
-                display: inline-flex; align-items: center; gap: 6px;
-            }
-            .cp-fx-toggle:hover {
-                color: var(--cp-pink);
-                border-color: var(--cp-pink);
-                text-shadow: 0 0 8px var(--cp-pink);
-                box-shadow: 0 0 16px rgba(255,43,214,0.55);
-            }
-            .cp-fx-toggle .cp-fx-dot {
-                width: 6px; height: 6px;
-                background: var(--cp-mint);
-                border-radius: 50%;
-                box-shadow: 0 0 8px var(--cp-mint);
-                transition: all 0.2s;
-            }
-            body.fx-off .cp-fx-toggle {
-                color: var(--cp-text-dim);
-                border-color: var(--cp-text-dim);
-                text-shadow: none;
-                box-shadow: none;
-            }
-            body.fx-off .cp-fx-toggle .cp-fx-dot {
-                background: transparent;
-                border: 1px solid var(--cp-text-dim);
-                box-shadow: none;
-            }
-            /* FX OFF: 关闭所有装饰性特效，保留布局和配色 */
-            body.fx-off .matrix-bg,
-            body.fx-off .matrix-code-rain,
-            body.fx-off .matrix-column { display: none !important; }
-            body.fx-off::before,
-            body.fx-off::after { display: none !important; content: none !important; }
-            body.fx-off { background: var(--cp-bg) !important; }
-            body.fx-off * {
-                animation: none !important;
-                transition: color 0.15s, background-color 0.15s, border-color 0.15s, box-shadow 0.15s !important;
-            }
-            body.fx-off .cp-glitch::before,
-            body.fx-off .cp-glitch::after { display: none !important; }
-            body.fx-off .terminal-cursor::after,
-            body.fx-off .cp-fab-save .cp-fab-dot { animation: none !important; }
-            body.fx-off .cp-fab-save:hover { transform: none !important; }
-            body.fx-off .cp-action-bar.cp-dirty::before { animation: none !important; }
-            body.fx-off .header::before { display: none !important; }
-            body.fx-off .card { backdrop-filter: none !important; }
-            body.fx-off select, body.fx-off input, body.fx-off textarea { backdrop-filter: none !important; }
+.cp-theme-toggle[data-current="light"] .cp-theme-icon-moon {
+  display: none;
+}
 
-            /* Status panel inside card */
-            #systemStatus {
-                background: linear-gradient(135deg, rgba(0,240,255,0.05), rgba(255,43,214,0.05)) !important;
-                border: 1px solid var(--cp-border) !important;
-                padding: 18px 20px !important;
-                margin: 14px 0 0 !important;
-                box-shadow: inset 0 0 16px rgba(0,240,255,0.12) !important;
-                position: relative;
-                clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
-            }
-            #systemStatus > div {
-                color: var(--cp-text) !important;
-                text-shadow: none !important;
-                font-family: inherit !important;
-                margin: 6px 0 !important;
-                font-size: 0.85rem !important;
-                letter-spacing: 0.05em;
-            }
-            #systemStatus > div:first-child {
-                color: var(--cp-pink) !important;
-                font-weight: 700 !important;
-                letter-spacing: 0.25em !important;
-                text-shadow: 0 0 6px var(--cp-pink) !important;
-                margin-bottom: 14px !important;
-                text-transform: uppercase;
-            }
+.cp-theme-toggle[data-current="light"] {
+  color: var(--text);
+}
 
-            /* Force inputs / selects to cyberpunk */
-            input[type="text"], input[type="number"], input[type="password"],
-            select, textarea {
-                background: rgba(0,0,0,0.6) !important;
-                border: 1px solid var(--cp-border) !important;
-                color: var(--cp-cyan) !important;
-                font-family: inherit !important;
-                font-size: 13px !important;
-                padding: 10px 12px !important;
-                outline: none;
-                transition: border-color 0.2s, box-shadow 0.2s;
-                box-shadow: inset 0 0 8px rgba(0,240,255,0.08) !important;
-                letter-spacing: 0.04em;
-            }
-            input::placeholder { color: var(--cp-text-dim) !important; opacity: 0.7; }
-            input:focus, select:focus, textarea:focus {
-                border-color: var(--cp-pink) !important;
-                box-shadow: 0 0 0 1px var(--cp-pink), 0 0 14px rgba(255,43,214,0.4) !important;
-            }
-            select option { background: var(--cp-bg-2); color: var(--cp-cyan); }
-            input[type="checkbox"], input[type="radio"] {
-                accent-color: var(--cp-pink);
-            }
+#cpThemeLabel {
+  white-space: nowrap;
+}
 
-            label {
-                color: var(--cp-cyan) !important;
-                letter-spacing: 0.05em;
-                text-shadow: 0 0 4px rgba(0,240,255,0.4);
-            }
-            label[style*="font-weight"], label[style*="bold"] {
-                font-weight: 700 !important;
-                color: var(--cp-pink) !important;
-                text-shadow: 0 0 6px var(--cp-pink) !important;
-                letter-spacing: 0.15em !important;
-                text-transform: uppercase;
-                font-size: 0.78rem !important;
-            }
-            small {
-                color: var(--cp-text-dim) !important;
-                font-size: 0.78rem !important;
-                letter-spacing: 0.04em;
-                line-height: 1.5;
-            }
+/* ==========================================================================
+   CFnew v3.1 — admin / settings page stylesheet (modern console)
+   Depends on _tokens.css (no :root block here). Dual theme via data-theme.
+   ========================================================================== */
 
-            /* Buttons inside forms - global override */
-            button, input[type="submit"] {
-                background: linear-gradient(135deg, rgba(0,240,255,0.15), rgba(255,43,214,0.15)) !important;
-                border: 1px solid var(--cp-border) !important;
-                color: var(--cp-cyan) !important;
-                font-family: inherit !important;
-                font-weight: 700 !important;
-                cursor: pointer;
-                padding: 10px 18px !important;
-                letter-spacing: 0.18em !important;
-                text-transform: uppercase;
-                font-size: 0.78rem !important;
-                text-shadow: 0 0 6px var(--cp-cyan) !important;
-                transition: all 0.25s ease;
-                clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
-                box-shadow: 0 0 10px rgba(0,240,255,0.25);
-            }
-            button:hover, input[type="submit"]:hover {
-                color: var(--cp-pink) !important;
-                border-color: var(--cp-pink) !important;
-                box-shadow: 0 0 16px rgba(255,43,214,0.45), 0 0 32px rgba(0,240,255,0.20) !important;
-                transform: translateY(-1px);
-                text-shadow: 0 0 8px var(--cp-pink) !important;
-            }
-            button[id*="Reset"], button[onclick*="reset"], button[style*="ff0000"] {
-                color: var(--cp-red) !important;
-                border-color: var(--cp-red) !important;
-                text-shadow: 0 0 6px var(--cp-red) !important;
-                background: linear-gradient(135deg, rgba(255,56,96,0.15), rgba(255,43,214,0.10)) !important;
-            }
-            button[id*="Reset"]:hover, button[onclick*="reset"]:hover, button[style*="ff0000"]:hover {
-                box-shadow: 0 0 16px rgba(255,56,96,0.5) !important;
-            }
-            button[id="stopLatencyTest"] {
-                color: var(--cp-red) !important;
-                border-color: var(--cp-red) !important;
-            }
+/* 1. Reset
+   ========================================================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-            /* Form sub-cards */
-            .card form > div[style*="background: rgba(15, 3, 40"],
-            .card form > div[style*="background: rgba(20, 5, 50"],
-            div[style*="background: rgba(15, 3, 40"],
-            div[style*="background: rgba(20, 5, 50"] {
-                background: linear-gradient(135deg, rgba(0,240,255,0.04), rgba(255,43,214,0.04)) !important;
-                border: 1px solid var(--cp-border-pink) !important;
-                box-shadow: inset 0 0 12px rgba(255,43,214,0.06) !important;
-                border-radius: 0 !important;
-            }
+html,
+body {
+  min-height: 100%;
+}
 
-            /* kvStatus / statusMessage / currentConfig / pathTypeInfo */
-            #kvStatus, #statusMessage, #currentConfig, #pathTypeInfo {
-                background: rgba(0,0,0,0.55) !important;
-                border: 1px solid var(--cp-border) !important;
-                color: var(--cp-cyan) !important;
-                font-family: inherit !important;
-                box-shadow: inset 0 0 10px rgba(0,240,255,0.10) !important;
-                padding: 12px 14px !important;
-                font-size: 0.85rem !important;
-                letter-spacing: 0.04em;
-            }
-            #pathTypeInfo div:first-child {
-                color: var(--cp-pink) !important;
-                text-shadow: 0 0 6px var(--cp-pink) !important;
-                letter-spacing: 0.2em !important;
-            }
+body {
+  background-color: var(--bg);
+  background-image: var(--glow);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, "Noto Sans", sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+  letter-spacing: normal;
+  text-transform: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
 
-            /* Latency Result list */
-            #latencyResultsList {
-                background: rgba(0,0,0,0.5) !important;
-                border: 1px solid var(--cp-border) !important;
-            }
-            #latencyResultsList > div {
-                border-bottom: 1px dashed rgba(0,240,255,0.18) !important;
-            }
-            #cityFilterContainer {
-                background: rgba(0,0,0,0.55) !important;
-                border: 1px solid var(--cp-border-pink) !important;
-            }
+/* Decorative background grid */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 48px 48px;
+  opacity: 0.9;
+}
 
-            /* Related links area */
-            .card a {
-                color: var(--cp-cyan) !important;
-                text-decoration: none;
-                text-shadow: 0 0 6px var(--cp-cyan);
-                letter-spacing: 0.15em;
-                text-transform: uppercase;
-                font-size: 0.85rem;
-                padding: 4px 0;
-                border-bottom: 1px dashed transparent;
-                transition: all 0.25s;
-            }
-            .card a:hover {
-                color: var(--cp-pink) !important;
-                border-bottom-color: var(--cp-pink);
-                text-shadow: 0 0 8px var(--cp-pink);
-            }
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: var(--glow);
+}
 
-            /* Scrollbars */
-            ::-webkit-scrollbar { width: 8px; height: 8px; }
-            ::-webkit-scrollbar-track { background: rgba(0,0,0,0.4); }
-            ::-webkit-scrollbar-thumb {
-                background: linear-gradient(180deg, var(--cp-pink), var(--cp-cyan));
-            }
+/* 2. Decorative matrix layers — kept subtle, never decorative noise
+   ========================================================================== */
+@keyframes cp-grid-slide {
+  from {
+    background-position: 0 0, 0 0;
+  }
+  to {
+    background-position: 0 48px, 48px 0;
+  }
+}
 
-            .cp-glitch {
-                position: relative;
-                display: inline-block;
-            }
+@keyframes cp-scan-flicker {
+  0%,
+  100% {
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 0.72;
+  }
+}
 
-            /* Floating action dock - bottom-right anchored FAB cluster */
-            .cp-action-bar {
-                position: fixed;
-                right: 22px;
-                bottom: 22px;
-                z-index: 99999;
-                isolation: isolate;
-                display: flex;
-                flex-direction: row-reverse;
-                align-items: center;
-                gap: 10px;
-                padding: 0;
-                background: transparent;
-                border: 0;
-                box-shadow: none;
-                max-width: calc(100vw - 32px);
-                pointer-events: auto;
-            }
-            /* Primary SAVE FAB - large, magenta, pulses when dirty */
-            .cp-fab-save {
-                position: relative;
-                min-width: 188px;
-                padding: 16px 26px !important;
-                font-size: 0.92rem !important;
-                font-weight: 800 !important;
-                letter-spacing: 0.22em !important;
-                text-transform: uppercase;
-                color: var(--cp-pink) !important;
-                background:
-                    linear-gradient(135deg, rgba(255,43,214,0.45) 0%, rgba(0,240,255,0.25) 100%) !important;
-                border: 2px solid var(--cp-pink) !important;
-                text-shadow: 0 0 10px var(--cp-pink) !important;
-                box-shadow:
-                    0 0 0 1px rgba(0,240,255,0.4),
-                    0 0 24px rgba(255,43,214,0.7),
-                    0 0 48px rgba(255,43,214,0.35),
-                    inset 0 0 18px rgba(255,43,214,0.25) !important;
-                clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
-                cursor: pointer;
-                transition: transform 0.18s ease, box-shadow 0.25s ease;
-                display: inline-flex; align-items: center; gap: 10px;
-                white-space: nowrap;
-                font-family: inherit !important;
-                animation: cp-fab-breathe 3.4s ease-in-out infinite;
-            }
-            @keyframes cp-fab-breathe {
-                0%, 100% {
-                    box-shadow:
-                        0 0 0 1px rgba(0,240,255,0.4),
-                        0 0 24px rgba(255,43,214,0.7),
-                        0 0 48px rgba(255,43,214,0.35),
-                        inset 0 0 18px rgba(255,43,214,0.25);
-                }
-                50% {
-                    box-shadow:
-                        0 0 0 1px rgba(0,240,255,0.55),
-                        0 0 32px rgba(255,43,214,0.9),
-                        0 0 80px rgba(255,43,214,0.45),
-                        inset 0 0 24px rgba(255,43,214,0.4);
-                }
-            }
-            .cp-fab-save:hover {
-                transform: translateY(-3px) scale(1.03);
-                color: #fff !important;
-                text-shadow: 0 0 14px #fff, 0 0 22px var(--cp-pink) !important;
-            }
-            .cp-fab-save .cp-fab-icon {
-                font-size: 1.15em;
-                line-height: 1;
-                color: var(--cp-cyan);
-                text-shadow: 0 0 10px var(--cp-cyan);
-            }
-            .cp-fab-save .cp-fab-dot {
-                width: 8px; height: 8px;
-                background: var(--cp-mint);
-                box-shadow: 0 0 8px var(--cp-mint);
-                transform: rotate(45deg);
-                margin-left: 4px;
-                opacity: 0.5;
-                transition: all 0.2s;
-            }
-            .cp-action-bar.cp-dirty .cp-fab-save {
-                animation: cp-fab-dirty 1.1s ease-in-out infinite;
-                color: #fff !important;
-            }
-            .cp-action-bar.cp-dirty .cp-fab-save .cp-fab-dot {
-                background: var(--cp-pink);
-                box-shadow: 0 0 12px var(--cp-pink), 0 0 24px var(--cp-pink);
-                opacity: 1;
-            }
-            @keyframes cp-fab-dirty {
-                0%, 100% {
-                    box-shadow:
-                        0 0 0 1px var(--cp-pink),
-                        0 0 24px rgba(255,43,214,0.85),
-                        0 0 60px rgba(255,43,214,0.5),
-                        inset 0 0 22px rgba(255,43,214,0.45);
-                    transform: scale(1);
-                }
-                50% {
-                    box-shadow:
-                        0 0 0 2px var(--cp-pink),
-                        0 0 40px rgba(255,43,214,1),
-                        0 0 100px rgba(255,43,214,0.7),
-                        inset 0 0 30px rgba(255,43,214,0.6);
-                    transform: scale(1.04);
-                }
-            }
-            /* Secondary mini buttons - icon-first */
-            .cp-action-btn {
-                background: rgba(8,4,28,0.85) !important;
-                border: 1px solid var(--cp-border) !important;
-                color: var(--cp-cyan) !important;
-                font-family: inherit !important;
-                font-weight: 700 !important;
-                cursor: pointer;
-                width: 46px; height: 46px;
-                padding: 0 !important;
-                letter-spacing: 0 !important;
-                font-size: 1.05rem !important;
-                text-shadow: 0 0 6px var(--cp-cyan) !important;
-                transition: all 0.25s ease;
-                clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
-                box-shadow: 0 0 10px rgba(0,240,255,0.35);
-                display: inline-flex; align-items: center; justify-content: center;
-                white-space: nowrap;
-                position: relative;
-            }
-            .cp-action-btn .cp-btn-label { display: none; }
-            .cp-action-btn::after {
-                content: attr(data-tip);
-                position: absolute;
-                bottom: 100%; right: 50%;
-                transform: translate(50%, -8px);
-                background: rgba(8,4,28,0.95);
-                color: var(--cp-cyan);
-                font-size: 10px;
-                letter-spacing: 0.18em;
-                text-transform: uppercase;
-                padding: 5px 9px;
-                border: 1px solid var(--cp-border);
-                opacity: 0; pointer-events: none;
-                transition: opacity 0.2s;
-                white-space: nowrap;
-                text-shadow: 0 0 5px var(--cp-cyan);
-                box-shadow: 0 0 10px rgba(0,240,255,0.4);
-            }
-            .cp-action-btn:hover::after { opacity: 1; }
-            .cp-action-btn:hover {
-                color: var(--cp-pink) !important;
-                border-color: var(--cp-pink) !important;
-                box-shadow: 0 0 16px rgba(255,43,214,0.55) !important;
-                transform: translateY(-2px);
-                text-shadow: 0 0 8px var(--cp-pink) !important;
-            }
-            .cp-action-btn-danger {
-                color: var(--cp-red) !important;
-                border-color: var(--cp-red) !important;
-                text-shadow: 0 0 6px var(--cp-red) !important;
-                box-shadow: 0 0 10px rgba(255,56,96,0.45) !important;
-            }
-            .cp-action-btn-danger:hover {
-                color: #fff !important;
-                box-shadow: 0 0 20px rgba(255,56,96,0.85) !important;
-                transform: translateY(-2px);
-            }
-            .cp-action-btn-saving,
-            .cp-fab-save.cp-action-btn-saving {
-                opacity: 0.7;
-                pointer-events: none;
-                animation: cp-pulse-pink 0.9s ease-in-out infinite !important;
-            }
-            @keyframes cp-pulse-pink {
-                0%, 100% { box-shadow: 0 0 12px rgba(255,43,214,0.45); }
-                50%      { box-shadow: 0 0 36px rgba(255,43,214,0.95); }
-            }
-            .container { padding-bottom: 130px; }
-            .cp-action-status {
-                position: fixed;
-                right: 22px;
-                bottom: 86px;
-                z-index: 99998;
-                padding: 9px 16px;
-                background: rgba(8,4,28,0.95);
-                border: 1px solid var(--cp-mint);
-                color: var(--cp-mint);
-                font-size: 0.78rem;
-                letter-spacing: 0.16em;
-                text-transform: uppercase;
-                text-shadow: 0 0 6px var(--cp-mint);
-                box-shadow: 0 0 14px rgba(0,255,157,0.45);
-                clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
-                opacity: 0;
-                transform: translateY(8px);
-                transition: opacity 0.25s, transform 0.25s;
-                pointer-events: none;
-                white-space: nowrap;
-                max-width: calc(100vw - 44px);
-                overflow: hidden; text-overflow: ellipsis;
-            }
-            .cp-action-status.cp-show { opacity: 1; transform: translateY(0); }
-            .cp-action-status.cp-err {
-                border-color: var(--cp-red);
-                color: var(--cp-red);
-                text-shadow: 0 0 6px var(--cp-red);
-                box-shadow: 0 0 14px rgba(255,56,96,0.55);
-            }
-            /* Toast notification stack (top-right) */
-            .cp-toast-stack {
-                position: fixed;
-                top: 88px;
-                right: 22px;
-                z-index: 100000;
-                display: flex;
-                flex-direction: column;
-                gap: 10px;
-                max-width: min(420px, calc(100vw - 32px));
-                pointer-events: none;
-            }
-            .cp-toast {
-                position: relative;
-                display: flex;
-                align-items: flex-start;
-                gap: 12px;
-                padding: 12px 16px 12px 14px;
-                background: linear-gradient(135deg, rgba(8,4,28,0.96) 0%, rgba(20,5,50,0.92) 100%);
-                border: 1px solid var(--cp-mint);
-                color: var(--cp-mint);
-                font-size: 0.82rem;
-                line-height: 1.45;
-                letter-spacing: 0.06em;
-                text-shadow: 0 0 6px var(--cp-mint);
-                box-shadow:
-                    0 0 0 1px rgba(0,255,157,0.25),
-                    0 0 18px rgba(0,255,157,0.45),
-                    0 8px 28px rgba(0,0,0,0.55);
-                backdrop-filter: blur(8px);
-                clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
-                transform: translateX(120%);
-                opacity: 0;
-                transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s;
-                pointer-events: auto;
-                overflow: hidden;
-                word-break: break-all;
-            }
-            .cp-toast.cp-show { transform: translateX(0); opacity: 1; }
-            .cp-toast.cp-hide { transform: translateX(120%); opacity: 0; }
-            .cp-toast::before {
-                content: "";
-                position: absolute;
-                left: 0; top: 0; bottom: 0;
-                width: 3px;
-                background: var(--cp-mint);
-                box-shadow: 0 0 10px var(--cp-mint);
-            }
-            .cp-toast-icon {
-                font-size: 1.1rem;
-                line-height: 1;
-                margin-top: 1px;
-                flex-shrink: 0;
-                color: var(--cp-mint);
-                text-shadow: 0 0 8px var(--cp-mint);
-            }
-            .cp-toast-body { flex: 1; min-width: 0; }
-            .cp-toast-title {
-                font-size: 0.72rem;
-                font-weight: 800;
-                letter-spacing: 0.22em;
-                text-transform: uppercase;
-                opacity: 0.85;
-                margin-bottom: 2px;
-            }
-            .cp-toast-msg { white-space: pre-wrap; }
-            .cp-toast-close {
-                position: absolute;
-                top: 6px; right: 8px;
-                background: transparent;
-                border: 0;
-                color: inherit;
-                font-size: 14px;
-                cursor: pointer;
-                opacity: 0.55;
-                padding: 2px 4px;
-                line-height: 1;
-                transition: opacity 0.2s;
-            }
-            .cp-toast-close:hover { opacity: 1; }
-            .cp-toast::after {
-                content: "";
-                position: absolute;
-                left: 0; bottom: 0;
-                height: 2px;
-                width: 100%;
-                background: linear-gradient(90deg, var(--cp-mint), transparent);
-                box-shadow: 0 0 6px var(--cp-mint);
-                transform-origin: left;
-                animation: cp-toast-bar var(--cp-toast-dur, 3200ms) linear forwards;
-            }
-            @keyframes cp-toast-bar {
-                from { transform: scaleX(1); }
-                to   { transform: scaleX(0); }
-            }
-            .cp-toast.cp-toast-success { border-color: var(--cp-mint); color: var(--cp-mint); text-shadow: 0 0 6px var(--cp-mint); }
-            .cp-toast.cp-toast-success::before,
-            .cp-toast.cp-toast-success::after { background: var(--cp-mint); box-shadow: 0 0 10px var(--cp-mint); }
-            .cp-toast.cp-toast-success .cp-toast-icon { color: var(--cp-mint); text-shadow: 0 0 8px var(--cp-mint); }
-            .cp-toast.cp-toast-info { border-color: var(--cp-cyan); color: var(--cp-cyan); text-shadow: 0 0 6px var(--cp-cyan); box-shadow: 0 0 0 1px rgba(0,240,255,0.25), 0 0 18px rgba(0,240,255,0.45), 0 8px 28px rgba(0,0,0,0.55); }
-            .cp-toast.cp-toast-info::before,
-            .cp-toast.cp-toast-info::after { background: var(--cp-cyan); box-shadow: 0 0 10px var(--cp-cyan); }
-            .cp-toast.cp-toast-info .cp-toast-icon { color: var(--cp-cyan); text-shadow: 0 0 8px var(--cp-cyan); }
-            .cp-toast.cp-toast-warn { border-color: var(--cp-amber); color: var(--cp-amber); text-shadow: 0 0 6px var(--cp-amber); box-shadow: 0 0 0 1px rgba(255,176,46,0.25), 0 0 18px rgba(255,176,46,0.45), 0 8px 28px rgba(0,0,0,0.55); }
-            .cp-toast.cp-toast-warn::before,
-            .cp-toast.cp-toast-warn::after { background: var(--cp-amber); box-shadow: 0 0 10px var(--cp-amber); }
-            .cp-toast.cp-toast-warn .cp-toast-icon { color: var(--cp-amber); text-shadow: 0 0 8px var(--cp-amber); }
-            .cp-toast.cp-toast-error { border-color: var(--cp-red); color: var(--cp-red); text-shadow: 0 0 6px var(--cp-red); box-shadow: 0 0 0 1px rgba(255,56,96,0.30), 0 0 18px rgba(255,56,96,0.55), 0 8px 28px rgba(0,0,0,0.55); }
-            .cp-toast.cp-toast-error::before,
-            .cp-toast.cp-toast-error::after { background: var(--cp-red); box-shadow: 0 0 10px var(--cp-red); }
-            .cp-toast.cp-toast-error .cp-toast-icon { color: var(--cp-red); text-shadow: 0 0 8px var(--cp-red); }
+.matrix-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 64px 64px;
+  opacity: 0.5;
+}
 
-            /* Tiny floating "unsaved" badge on the FAB */
-            .cp-action-bar.cp-dirty::before {
-                content: "● UNSAVED";
-                position: absolute;
-                top: -22px; right: 6px;
-                font-size: 9px;
-                letter-spacing: 0.3em;
-                color: var(--cp-pink);
-                text-shadow: 0 0 6px var(--cp-pink);
-                background: rgba(8,4,28,0.92);
-                padding: 3px 8px;
-                border: 1px solid var(--cp-pink);
-                box-shadow: 0 0 10px rgba(255,43,214,0.6);
-                animation: cp-pulse-pink 1.6s ease-in-out infinite;
-            }
+.matrix-rain {
+  display: none;
+}
 
-            @media (max-width: 720px) {
-                .container { padding: 100px 14px 140px; }
-                .card { padding: 22px 18px; }
-                .header { padding: 22px 18px; }
-                .title { font-size: 2rem; }
-                .cp-hud { font-size: 9px; }
-                .cp-action-bar {
-                    right: 50%;
-                    bottom: 14px;
-                    transform: translateX(50%);
-                    gap: 8px;
-                }
-                .cp-fab-save {
-                    min-width: 0;
-                    padding: 13px 18px !important;
-                    font-size: 0.8rem !important;
-                    letter-spacing: 0.16em !important;
-                }
-                .cp-action-btn { width: 42px; height: 42px; }
-                .cp-action-status { right: 50%; transform: translate(50%, 8px); }
-                .cp-action-status.cp-show { transform: translate(50%, 0); }
-            }
-        </style>
+.matrix-code-rain {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0.28;
+}
+
+.matrix-column {
+  position: absolute;
+  top: -100%;
+  color: var(--accent);
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+"Liberation Mono", monospace;
+  font-size: 12px;
+  line-height: 1.2;
+  white-space: pre;
+  opacity: 0.35;
+  animation-name: cp-drop;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes cp-drop {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(100vh);
+  }
+}
+
+.matrix-column:nth-child(odd) {
+  animation-duration: 38s;
+}
+
+.matrix-column:nth-child(even) {
+  animation-duration: 52s;
+}
+
+.matrix-column:nth-child(3n) {
+  animation-duration: 64s;
+}
+
+.matrix-column:nth-child(5n) {
+  animation-duration: 30s;
+  opacity: 0.22;
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+/* 3. Layout shell
+   ========================================================================== */
+.container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 32px 24px 130px;
+}
+
+/* 4. Header / hero
+   ========================================================================== */
+.header {
+  position: relative;
+  margin: 0 0 24px;
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.header::before,
+.header::after {
+  content: none;
+}
+
+.title {
+  margin: 0;
+  color: var(--text);
+  font-size: 2rem;
+  font-weight: 650;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  text-transform: none;
+}
+
+.subtitle {
+  margin: 4px 0 0;
+  color: var(--text-mut);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.subtitle::before {
+  content: none;
+}
+
+/* 5. Card surface — glassmorphism
+   ========================================================================== */
+.card {
+  position: relative;
+  margin: 0 0 24px;
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow);
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--accent) 7%, transparent),
+    transparent 40%
+  );
+  opacity: 0.5;
+}
+
+.card:hover {
+  border-color: var(--border-str);
+  box-shadow: var(--shadow-lg);
+}
+
+.card-title {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 16px;
+  padding: 0 0 12px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.card-title::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 3px;
+  height: 18px;
+  border-radius: 8px;
+  background: var(--accent);
+}
+
+.card-title::after {
+  content: none;
+}
+
+.card a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color 160ms ease, border-color 160ms ease;
+}
+
+.card a:hover {
+  color: var(--accent-2);
+  border-bottom-color: var(--accent-2);
+}
+
+h3,
+h4 {
+  margin: 24px 0 12px;
+  color: var(--text);
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+h3 {
+  font-size: 1.125rem;
+}
+
+h4 {
+  font-size: 0.9375rem;
+  color: var(--text-mut);
+}
+
+/* 6. Client subscription launcher
+   ========================================================================== */
+.client-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(168px, 1fr));
+  gap: 12px;
+  margin: 16px 0 24px;
+}
+
+.client-btn {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 12px 16px;
+  border: 1px solid var(--border-str);
+  border-radius: 12px;
+  background: var(--surface-2);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.9375rem;
+  font-weight: 550;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 180ms ease, border-color 180ms ease,
+    transform 180ms ease, box-shadow 180ms ease;
+}
+
+.client-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--accent) 20%, transparent),
+    transparent
+  );
+  transition: left 260ms ease;
+}
+
+.client-btn:hover::before {
+  left: 100%;
+}
+
+.client-btn:hover {
+  border-color: var(--accent);
+  background: var(--surface-3);
+  box-shadow: var(--shadow);
+  transform: translateY(-1px);
+}
+
+.client-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.client-btn:active {
+  transform: translateY(0);
+}
+
+/* 7. Subscription URL output box
+   ========================================================================== */
+#clientSubscriptionUrl,
+.subscription-url,
+[class*='subscription-url'],
+[class*='c3Vic2N5YnNjcmlwdGlvbg'] {
+  display: block;
+  width: 100%;
+  margin: 12px 0;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-2);
+  color: var(--text);
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  word-break: no break-word;
+  overflow-wrap: anywhere;
+  user-select: all;
+  -webkit-user-select: all;
+}
+
+#clientSubscriptionUrl:empty {
+  display: none;
+}
+
+/* 8. HUD / language controls
+   ========================================================================== */
+.cp-hud {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin: 0 0 16px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-2);
+  color: var(--text-mut);
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas..., monospace;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.cp-hud .cp-hud-label {
+  color: var(--text-dim);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.cp-hud .cp-hud-line {
+  display: block;
+}
+
+.cp-lang-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.cp-lang-tag {
+  padding: 2px 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-3);
+  color: var(--text-mut);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+#languageSelector {
+  min-height: 34px;
+  padding: 6px 12px;
+  border: 1px solid var(--border-str);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  transition: border-color 180ms ease, background-color 180ms ease;
+}
+
+#languageSelector:hover {
+  border-color: var(--accent);
+}
+
+#languageSelector option {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+/* FX toggle */
+.cp-fx-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-2);
+  color: var(--text-mut);
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: 550;
+  cursor: pointer;
+  transition: background-color 180ms ease, border-color 180ms ease,
+    color 180ms ease;
+}
+
+.cp-fx-toggle:hover {
+  border-color: var(--accent);
+  background: var(--surface-3);
+  color: var(--text);
+}
+
+.cp-fx-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.cp-fx-toggle .cp-fx-dot {
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ok);
+  transition: background-color 200ms ease;
+}
+
+body.fx-off .cp-fx-toggle {
+  border-color: var(--border);
+  background: var(--surface-2);
+  color: var(--text-dim);
+}
+
+body.fx-off .cp-fx-toggle .cp-fx-dot {
+  background: var(--text-dim);
+}
+
+/* 9. FX-off: strip every decorative / expensive effect
+   ========================================================================== */
+body.fx-off .matrix-column {
+  display: none;
+}
+
+body.fx-off::after {
+  display: none;
+  content: none;
+}
+
+body.fx-off {
+  background-image: none;
+}
+
+body.fx-off *,
+body.fx-off *::before,
+body.fx-off *::after {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  animation: none;
+  transition: none;
+}
+
+body.fx-off .cp-glitch::after {
+  display: none;
+}
+
+body.fx-off .cp-fab-save .cp-fab-dot {
+  animation: none;
+}
+
+body.fx-off .cp-fab-save:hover {
+  transform: none;
+}
+
+body.fx-off .cp-action-bar.cp-dirty::before {
+  animation: none;
+}
+
+body.fx-off .header::before {
+  display: none;
+}
+
+body.fx-off .card {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background: var(--surface);
+}
+
+body.fx-off select,
+body.fx-off input,
+body.fx-off textarea {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+/* 10. Status readout panel  (#systemStatus + .status-* )
+   ========================================================================== */
+.status-panel {
+  display: grid;
+  gap: 6px;
+  margin: 16px 0 0;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-2);
+}
+
+.status-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 16px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text-mut);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.status-row-title {
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-weight: 600;
+}
+
+.status-row-dim {
+  color: var(--text-dim);
+  font-size: 0.8125rem;
+}
+
+.status-row > span,
+.status-row strong,
+.status-row b,
+.status-row code,
+.status-row .cp-hud-value {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+  font-size: 0.8125rem;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+/* 11. Form controls  (element defaults + .field-* system)
+   ========================================================================== */
+select,
+textarea,
+input[type="text"],
+input[type="url"],
+input[type="number"],
+input[type="password"] {
+  width: 100%;
+  max-width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border-str);
+  border-radius: 8px;
+  background: var(--surface-2);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  transition: border-color 180ms ease, background-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+textarea {
+  min-height: 96px;
+  resize: vertical;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+  font-size: 0.8125rem;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-dim);
+  opacity: 0.8;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--accent);
+  background: var(--surface);
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+select option {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+/* --- field blocks --------------------------------------------------------- */
+.form-block {
+  margin: 0;
+}
+
+.field {
+  margin-bottom: 18px;
+}
+
+.field-tight {
+  margin-bottom: 10px;
+}
+
+.field-inline {
+  margin-bottom: 0;
+}
+
+.field-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.field-row-tight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.field-w120 { flex: 0 0 120px; width: 120px; }
+.field-w100 { flex: 0 0 100px; width: 100px; }
+.field-w80  { flex: 0 0 80px;  width: 80px; }
+
+.field-input-grow { flex: 1 1 auto; min-width: 0; }
+
+.field-label {
+  display: block;
+  margin: 0 0 7px;
+  color: var(--text);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.45;
+  letter-spacing: 0.005em;
+}
+
+.field-label-sm {
+  margin-bottom: 5px;
+  color: var(--text-mut);
+  font-size: 0.75rem;
+  font-weight: 550;
+}
+
+.field-input {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--border-str);
+  border-radius: 8px;
+  background: var(--surface-2);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  transition: border-color 180ms ease, background-color 180ms ease;
+}
+
+.field-input-sm {
+  padding: 7px 10px;
+  font-size: 0.8125rem;
+}
+
+.field-hint {
+  display: block;
+  margin: 6px 0 0;
+  color: var(--text-dim);
+  font-size: 0.75rem;
+  line-height: 1.55;
+}
+
+.field-hint-indent { margin-left: 26px; }
+.field-hint-block  { margin-top: 10px; }
+.field-hint-warn   { color: var(--warn); }
+
+/* --- checkbox / radio rows ------------------------------------------------ */
+.panel {
+  margin: 0;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-2);
+}
+
+.panel-section {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.panel-title {
+  margin: 0 0 12px;
+  color: var(--text);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.panel-kv {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.panel-latency {
+  margin: 18px 0 4px;
+  padding: 16px;
+}
+
+.panel-filter {
+  margin: 10px 0;
+  padding: 12px 14px;
+}
+
+.checkbox-row-wrap {
+  margin-bottom: 8px;
+}
+
+.checkbox-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  padding: 6px 9px;
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 0.875rem;
+  line-height: 1.45;
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+
+.checkbox-row:hover {
+  background: var(--surface-3);
+}
+
+.checkbox-row-inline {
+  font-size: 0.8125rem;
+}
+
+.checkbox-row-spaced {
+  margin-left: 16px;
+}
+
+.checkbox-input {
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.checkbox-input-sm {
+  flex-basis: 15px;
+  width: 15px;
+  height: 15px;
+}
+
+.checkbox-text {
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+
+.checkbox-text-sm {
+  color: var(--text-mut);
+  font-size: 0.8125rem;
+}
+
+.check-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+}
+
+.check-group-scroll {
+  max-height: 104px;
+  overflow-y: auto;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.filter-mode-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 14px;
+  margin-bottom: 10px;
+}
+
+/* 12. Buttons
+   ========================================================================== */
+button,
+input[type="submit"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 9px 16px;
+  border: 1px solid var(--border-str);
+  border-radius: 8px;
+  background: var(--surface-2);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 550;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: background-color 160ms ease, border-color 160ms ease,
+    color 160ms ease, opacity 160ms ease;
+}
+
+button:hover,
+input[type="submit"]:hover {
+  border-color: var(--accent);
+  background: var(--surface-3);
+}
+
+button:focus-visible,
+input[type="submit"]:focus-visible,
+a:focus-visible,
+select:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+button:disabled,
+input[type="submit"]:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+button:disabled:hover {
+  border-color: var(--border-str);
+  background: var(--surface-2);
+}
+
+.btn {
+  flex: 0 0 auto;
+}
+
+.btn-primary {
+  border-color: var(--accent-2);
+  background: var(--accent-2);
+  color: #FFFFFF;
+}
+
+.btn-primary:hover {
+  border-color: color-mix(in srgb, var(--accent-2) 84%, #000);
+  background: color-mix(in srgb, var(--accent-2) 84%, #000);
+}
+
+.btn-danger {
+  border-color: color-mix(in srgb, var(--err) 45%, var(--border-str));
+  background: var(--err-soft);
+  color: var(--err);
+}
+
+.btn-danger:hover {
+  border-color: var(--err);
+  background: var(--err);
+  color: #FFFFFF;
+}
+
+.btn-ghost {
+  border-color: var(--border-str);
+  background: transparent;
+  color: var(--text-mut);
+}
+
+.btn-ghost:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+.btn-sm {
+  min-height: 30px;
+  padding: 5px 11px;
+  font-size: 0.75rem;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.btn-flex {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.btn-nowrap {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.btn-row-tight {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-row-top {
+  margin-top: 14px;
+}
+
+.icon {
+  flex: 0 0 auto;
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* 13. Composite blocks  (latency results, code blocks, links)
+   ========================================================================== */
+.latency-results {
+  margin-top: 14px;
+}
+
+.latency-status {
+  display: block;
+  margin: 10px 0;
+  color: var(--text-mut);
+}
+
+.results-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.results-title {
+  color: var(--text);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.results-list {
+  display: grid;
+  gap: 6px;
+  max-height: 360px;
+  overflow-y: auto;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-2);
+}
+
+.results-list > div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text-mut);
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  transition: background-color 150ms ease;
+}
+
+.results-list > div:hover {
+  background: var(--surface-3);
+}
+
+.section-heading {
+  margin: 30px 0 14px;
+  color: var(--text);
+  font-size: 1.0625rem;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.code-block {
+  margin: 12px 0;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-2);
+  color: var(--text-mut);
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.code-block-info {
+  background: var(--surface-2);
+}
+
+.code-block-title {
+  margin-bottom: 6px;
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.status-message {
+  margin: 12px 0;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-2);
+  color: var(--text);
+  font-size: 0.875rem;
+  line-height: 1.55;
+}
+
+.link-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.link-item {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-2);
+  color: var(--accent);
+  font-size: 0.875rem;
+  font-weight: 550;
+  text-decoration: none;
+  transition: border-color 160ms ease, background-color 160ms ease,
+    color 160ms ease;
+}
+
+.link-item:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.is-hidden {
+  display: none;
+}
+
+/* --------------------------------------------------------------------------
+   13b. Legacy neon remap
+   The page JS still injects a handful of hard-coded neon colours into
+   innerHTML / style.color. Remap them onto design tokens so the palette stays
+   coherent without touching any page logic.
+   -------------------------------------------------------------------------- */
+[style*="#00f0ff"], [style*="rgb(0, 240, 255)"],
+[style*="#00aaff"], [style*="rgb(0, 170, 255)"] {
+  color: var(--accent) !important;
+  border-color: var(--accent) !important;
+}
+
+[style*="#00ff9d"], [style*="rgb(0, 255, 157)"] {
+  color: var(--ok) !important;
+  border-color: var(--ok) !important;
+}
+
+[style*="#ffb400"], [style*="rgb(255, 180, 0)"] {
+  color: var(--warn) !important;
+  border-color: var(--warn) !important;
+}
+
+[style*="#ff3860"], [style*="rgb(255, 56, 96)"],
+[style*="#ff0000"], [style*="rgb(255, 0, 0)"] {
+  color: var(--err) !important;
+  border-color: var(--err) !important;
+}
+
+[style*="#7aa9c4"], [style*="rgb(122, 169, 196)"] {
+  color: var(--text-mut) !important;
+}
+
+[style*="#ff2bd6"], [style*="rgb(255, 43, 214)"],
+[style*="#a347ff"], [style*="rgb(163, 71, 255)"],
+[style*="#fff200"], [style*="rgb(255, 242, 0)"] {
+  color: var(--accent) !important;
+}
+
+/* --------------------------------------------------------------------------
+   13c. Normalise styles that the page JS writes directly onto elements it
+   creates (cssText / style.backgroundColor). These cannot be reached by the
+   markup classes, so they are pinned to design tokens here. No page logic is
+   touched.
+   -------------------------------------------------------------------------- */
+#wkRegionHint {
+  background: transparent !important;
+}
+
+#latencyResultsList > div {
+  border-bottom: 0 !important;
+}
+
+#cityCheckboxesContainer label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 9px !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+  background: var(--surface) !important;
+  color: var(--text-mut) !important;
+  font-size: 0.75rem !important;
+  line-height: 1.4;
+  cursor: pointer;
+  transition: border-color 150ms ease, background-color 150ms ease,
+    color 150ms ease;
+}
+
+#cityCheckboxesContainer label:hover {
+  border-color: var(--accent) !important;
+  background: var(--accent-soft) !important;
+  color: var(--text) !important;
+}
+
+#cityCheckboxesContainer label input[type="checkbox"] {
+  flex: 0 0 15px;
+  width: 15px;
+  height: 15px;
+  margin: 0 !important;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+/* 14. Scrollbars
+   ========================================================================== */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--surface-2);
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 8px;
+  background: var(--border-str);
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-dim);
+  background-clip: padding-box;
+}
+
+/* 15. Page title hook (legacy .cp-glitch name) — clean modern title
+   ========================================================================== */
+.cp-glitch {
+  position: relative;
+  color: var(--text);
+  font-size: 2rem;
+  font-weight: 650;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  text-shadow: none;
+  text-transform: none;
+}
+
+.cp-glitch::after {
+  content: none;
+  display: none;
+}
+
+/* 16. Floating action bar
+   ========================================================================== */
+.cp-action-bar {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--surface);
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Primary save FAB */
+@keyframes cp-fab-breathe {
+  0%,
+  100% {
+    box-shadow: 0 8px 24px color-mix(in srgb, var(--accent) 24%, transparent);
+  }
+  50% {
+    box-shadow: 0 8px 32px color-mix(in srgb, var(--accent) 38%, transparent);
+  }
+}
+
+.cp-fab-save {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 12px 20px;
+  border: 1px solid var(--accent);
+  border-radius: 16px;
+  background: var(--accent);
+  color: #FFFFFF;
+  font-family: inherit;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  animation: cp-fab-breathe 4s ease-in-out infinite;
+  transition: background-color 180ms ease, transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.cp-fab-save:hover {
+  background: var(--accent-2);
+  transform: translateY(-1px);
+}
+
+.cp-fab-save:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.cp-fab-save .cp-fab-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+}
+
+.cp-fab-save .cp-fab-dot {
+  width: 8px;
+  height: 8px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.55);
+  animation: none;
+}
+
+/* Dirty state */
+.cp-action-bar.cp-dirty .cp-fab-save {
+  background: var(--accent-2);
+  animation: cp-fab-dirty 2.6s ease-in-out infinite;
+}
+
+.cp-action-bar.cp-dirty .cp-fab-save .cp-fab-dot {
+  background: var(--warn);
+  animation: cp-fab-dirty 1.4s ease-in-out infinite;
+}
+
+@keyframes cp-fab-dirty {
+  0%,
+  100% {
+    box-shadow: 0 8px 24px color-mix(in srgb, var(--warn) 20%, transparent);
+  }
+  50% {
+    box-shadow: 0 8px 32px color-mix(in srgb, var(--warn) 42%, transparent);
+  }
+}
+
+/* Secondary action button */
+.cp-action-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--border-str);
+  border-radius: 16px;
+  background: var(--surface-2);
+  color: var(--text-mut);
+  font-family: inherit;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background-color 180ms ease, border-color 180ms ease,
+    color 180ms ease;
+}
+
+.cp-action-btn .cp-btn-label {
+  display: none;
+}
+
+.cp-action-btn::after {
+  content: attr(title);
+  position: absolute;
+  right: 50%;
+  bottom: calc(100% + 8px);
+  transform: translateX(50%);
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-3);
+  color: var(--text);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.3;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms ease;
+}
+
+.cp-action-btn:hover::after {
+  opacity: 1;
+}
+
+.cp-action-btn:hover {
+  border-color: var(--accent);
+  background: var(--surface-3);
+  color: var(--text);
+}
+
+.cp-action-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.cp-action-btn-danger {
+  color: var(--err);
+}
+
+.cp-action-btn-danger:hover {
+  border-color: var(--err);
+  background: var(--err-soft);
+  color: var(--err);
+}
+
+/* Saving state */
+.cp-fab-save.cp-action-btn-saving {
+  background: var(--accent-2);
+  cursor: progress;
+  animation: cp-pulse-pink 1.6s ease-in-out infinite;
+}
+
+@keyframes cp-pulse-pink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.72;
+  }
+}
+
+/* Bottom breathing room so the bar never covers content */
+.container {
+  padding-bottom: 130px;
+}
+
+/* 17. Action status pill
+   ========================================================================== */
+.cp-action-status {
+  position: fixed;
+  right: 24px;
+  bottom: 88px;
+  z-index: 61;
+  max-width: 320px;
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-3);
+  color: var(--text-mut);
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    monospace;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+
+.cp-action-status.cp-show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cp-action-status.cp-err {
+  border-color: var(--err);
+  background: var(--err-soft);
+  color: var(--err);
+}
+
+/* Dirty indicator sweep along the bar */
+.cp-action-bar.cp-dirty::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--warn) 32%, transparent),
+    transparent
+  );
+  animation: cp-dirty-sweep 2.4s linear infinite;
+}
+
+@keyframes cp-dirty-sweep {
+  from {
+    background-position: -200% 0;
+  }
+  to {
+    background-position: 200% 0;
+  }
+}
+
+/* 18. Toasts — anchored bottom-right
+   ========================================================================== */
+.cp-toast-stack {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 80;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  width: min(360px, calc(100vw - 48px));
+  pointer-events: none;
+}
+
+.cp-toast {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  padding: 16px 16px 18px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 12px;
+  background: var(--surface);
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-lg);
+  color: var(--text);
+  pointer-events: auto;
+  transform: translateX(120%);
+  opacity: 0;
+  transition: transform 260ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    opacity 260ms ease;
+}
+
+.cp-toast.cp-show {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.cp-toast.cp-hide {
+  transform: translateX(120%);
+  opacity: 0;
+}
+
+.cp-toast::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  border-radius: 12px 0 0 12px;
+  background: var(--accent);
+}
+
+.cp-toast-icon {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  color: var(--accent);
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.cp-toast-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.cp-toast-title {
+  color: var(--text);
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.cp-toast-msg {
+  white-space: pre-wrap;
+  margin: 4px 0 0;
+  color: var(--text-mut);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.cp-toast-close {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 160ms ease, background-color 160ms ease,
+    color 160ms ease;
+}
+
+.cp-toast-close:hover {
+  background: var(--surface-3);
+  color: var(--text);
+  opacity: 1;
+}
+
+.cp-toast-close:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Auto-dismiss progress bar */
+.cp-toast::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  transform-origin: left center;
+  background: var(--accent);
+  animation: cp-toast-bar 5s linear forwards;
+}
+
+@keyframes cp-toast-bar {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+
+/* Toast variants */
+.cp-toast.cp-toast-success {
+  border-color: var(--border);
+  border-left-color: var(--ok);
+  color: var(--text);
+}
+
+.cp-toast.cp-toast-success::before {
+  background: var(--ok);
+}
+
+.cp-toast.cp-toast-success::after {
+  background: var(--ok);
+}
+
+.cp-toast.cp-toast-success .cp-toast-icon {
+  color: var(--ok);
+}
+
+.cp-toast.cp-toast-info {
+  border-color: var(--border);
+  border-left-color: var(--info);
+  color: var(--text);
+}
+
+.cp-toast.cp-toast-info::before {
+  background: var(--info);
+}
+
+.cp-toast.cp-toast-info::after {
+  background: var(--info);
+}
+
+.cp-toast.cp-toast-info .cp-toast-icon {
+  color: var(--info);
+}
+
+.cp-toast.cp-toast-warn {
+  border-color: var(--border);
+  border-left-color: var(--warn);
+  color: var(--text);
+}
+
+.cp-toast.cp-toast-warn::before {
+  background: var(--warn);
+}
+
+.cp-toast.cp-toast-warn::after {
+  background: var(--warn);
+}
+
+.cp-toast.cp-toast-warn .cp-toast-icon {
+  color: var(--warn);
+}
+
+.cp-toast.cp-toast-error {
+  border-color: var(--border);
+  border-left-color: var(--err);
+  color: var(--text);
+}
+
+.cp-toast.cp-toast-error::before {
+  background: var(--err);
+}
+
+.cp-toast.cp-toast-error::after {
+  background: var(--err);
+}
+
+.cp-toast.cp-toast-error .cp-toast-icon {
+  color: var(--err);
+}
+
+/* 19. JS visibility helpers
+   --------------------------------------------------------------------------
+   NOTE: the page JS reuses 'cp-show' / 'cp-hide' for TWO different purposes:
+     - .cp-toast      -> slide in/out via transform  (handled in section 18)
+     - #cpActionStatus -> reveal/hide via display
+   These helper rules must therefore NOT match a .cp-toast, otherwise the
+   bare display:none would hard-cut the toast instead of letting it slide.
+   :not(.cp-toast) keeps the two behaviours independent.
+   ========================================================================== */
+.cp-hide:not(.cp-toast) {
+  display: none;
+}
+
+.cp-show:not(.cp-toast) {
+  display: block;
+}
+
+/* 20. Responsive
+   ========================================================================== */
+@media (max-width: 720px) {
+  .container {
+    padding: 24px 16px 130px;
+  }
+
+  .card {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .header {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .cp-glitch {
+    font-size: 1.5rem;
+  }
+
+  .cp-hud {
+    font-size: 11px;
+ }
+
+  .cp-lang-wrapper {
+    margin-left: 0;
+  }
+
+  .cp-action-bar {
+    right: 16px;
+    bottom: 16px;
+    gap: 8px;
+  }
+
+  .cp-fab-save {
+    padding: 12px 16px;
+ }
+
+  .cp-action-btn {
+    width: 42px;
+    height: 42px;
+  }
+
+  .cp-action-status {
+    right: 50%;
+    bottom: 84px;
+    transform: translate(50%, 8px);
+  }
+
+  .cp-action-status.cp-show {
+    transform: translate(50%, 0);
+  }
+
+  .cp-toast-stack {
+    right: 16px;
+    bottom: 16px;
+    width: calc(100vw - 32px);
+  }
+}
+
+/* 21. Reduced motion
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+    animation-delay: 0ms;
+    transition-duration: 0.01ms;
+    scroll-behavior: auto;
+  }
+}
+
+/* 22. Extended responsive for the field / button system
+   ========================================================================== */
+@media (max-width: 720px) {
+  .field-w120,
+  .field-w100,
+  .field-w80 {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+
+  .field-row {
+    gap: 10px;
+  }
+
+  .btn-flex,
+  .btn-row > .btn {
+    flex: 1 1 100%;
+  }
+
+  .link-row {
+    flex-direction: column;
+  }
+
+  .link-item {
+    justify-content: center;
+  }
+
+  .results-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+</style>
     </head>
-    <body>
+<body>
         <div class="matrix-bg"></div>
         <div class="matrix-code-rain" id="matrixCodeRain"></div>
             <div class="cp-hud">
@@ -5520,6 +7166,16 @@ async function 处理订阅值(请求241, 用户240 = null) {
                 <span class="cp-fx-dot" aria-hidden="true"></span>
                 <span id="cpFxLabel">FX: ON</span>
             </button>
+<button type="button" id="cpThemeToggle" class="cp-theme-toggle" data-current="dark" title="切换主题皮肤" aria-label="切换主题皮肤">
+                    <svg class="cp-theme-icon cp-theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M20.2 14.6A8.3 8.3 0 0 1 9.4 3.8a8.5 8.5 0 1 0 10.8 10.8Z"/>
+                    </svg>
+                    <svg class="cp-theme-icon cp-theme-icon-sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <circle cx="12" cy="12" r="4.1"/>
+                        <path d="M12 2.4v2.3M12 19.3v2.3M4.2 4.2l1.7 1.7M18.1 18.1l1.7 1.7M2.4 12h2.3M19.3 12h2.3M4.2 19.8l1.7-1.7M18.1 5.9l1.7-1.7"/>
+                    </svg>
+                    <span id="cpThemeLabel">深色</span>
+                </button>
         <div class="container">
             <div class="header">
                     <h1 class="title cp-glitch" data-text="${翻译值.title}">${翻译值.title}</h1>
@@ -5544,27 +7200,29 @@ async function 处理订阅值(请求241, 用户240 = null) {
             </div>
             <div class="card">
                     <h2 class="card-title">${翻译值.systemStatus}</h2>
-                <div id="systemStatus" style="margin: 20px 0; padding: 15px; background: rgba(8, 4, 28, 0.8); border: 2px solid #00f0ff; box-shadow: 0 0 20px rgba(0, 240, 255, 0.3), inset 0 0 15px rgba(0, 240, 255, 0.1); position: relative; overflow: hidden;">
-                        <div style="color: #00f0ff; margin-bottom: 15px; font-weight: bold; text-shadow: 0 0 5px #00f0ff;">[ ${翻译值.checking} ]</div>
-                        <div id="regionStatus" style="margin: 8px 0; color: #00f0ff; font-family: 'Courier New', monospace; text-shadow: 0 0 3px #00f0ff;">${翻译值.workerRegion}${翻译值.checking}</div>
-                        <div id="geoInfo" style="margin: 8px 0; color: #7aa9c4; font-family: 'Courier New', monospace; font-size: 0.9rem; text-shadow: 0 0 3px #7aa9c4;">${翻译值.detectionMethod}${翻译值.checking}</div>
-                        <div id="backupStatus" style="margin: 8px 0; color: #00f0ff; font-family: 'Courier New', monospace; text-shadow: 0 0 3px #00f0ff;">${翻译值.proxyIPStatus}${翻译值.checking}</div>
-                        <div id="currentIP" style="margin: 8px 0; color: #00f0ff; font-family: 'Courier New', monospace; text-shadow: 0 0 3px #00f0ff;">${翻译值.currentIP}${翻译值.checking}</div>
-                        <div id="echStatus" style="margin: 8px 0; color: #00f0ff; font-family: 'Courier New', monospace; text-shadow: 0 0 3px #00f0ff; font-size: 0.9rem;">ECH状态: ${翻译值.checking}</div>
-                        <div id="regionMatch" style="margin: 8px 0; color: #00f0ff; font-family: 'Courier New', monospace; text-shadow: 0 0 3px #00f0ff;">${翻译值.regionMatch}${翻译值.checking}</div>
-                        <div id="selectionLogic" style="margin: 8px 0; color: #7aa9c4; font-family: 'Courier New', monospace; font-size: 0.9rem; text-shadow: 0 0 3px #7aa9c4;">${翻译值.selectionLogic}${翻译值.selectionLogicText}</div>
+                <div id="systemStatus" class="status-panel">
+                        <div class="status-row status-row-title">[ ${翻译值.checking} ]</div>
+                        <div id="regionStatus" class="status-row">${翻译值.workerRegion}${翻译值.checking}</div>
+                        <div id="geoInfo" class="status-row status-row-dim">${翻译值.detectionMethod}${翻译值.checking}</div>
+                        <div id="backupStatus" class="status-row">${翻译值.proxyIPStatus}${翻译值.checking}</div>
+                        <div id="currentIP" class="status-row">${翻译值.currentIP}${翻译值.checking}</div>
+                        <div id="echStatus" class="status-row">ECH状态: ${翻译值.checking}</div>
+                        <div id="regionMatch" class="status-row">${翻译值.regionMatch}${翻译值.checking}</div>
+                        <div id="selectionLogic" class="status-row status-row-dim">${翻译值.selectionLogic}${翻译值.selectionLogicText}</div>
                 </div>
             </div>
-            <div class="card" id="configCard" style="display: none;">
+            <!-- configCard: JS toggles this panel via style.display -->
+            <div class="card is-hidden" id="configCard">
                     <h2 class="card-title">${翻译值.configManagement}</h2>
-                <div id="kvStatus" style="margin-bottom: 20px; padding: 10px; background: rgba(8, 4, 28, 0.8); border: 1px solid #00f0ff; color: #00f0ff;">
+                <div id="kvStatus" class="panel panel-kv">
                     ${翻译值.kvStatusChecking}
                 </div>
-                <div id="configContent" style="display: none;">
-                    <form id="regionForm" style="margin-bottom: 20px;">
-                        <div style="margin-bottom: 15px;">
-                                <label style="display: block; margin-bottom: 8px; color: #00f0ff; font-weight: bold; text-shadow: 0 0 3px #00f0ff;">${翻译值.specifyRegion}</label>
-                            <select id="wkRegion" style="width: 100%; padding: 12px; background: rgba(0, 0, 0, 0.8); border: 2px solid #00f0ff; color: #00f0ff; font-family: 'Courier New', monospace; font-size: 14px;">
+                <!-- configContent: JS toggles this panel via style.display -->
+                <div id="configContent" class="is-hidden">
+                    <form id="regionForm" class="form-block">
+                        <div class="field">
+                                <label class="field-label">${翻译值.specifyRegion}</label>
+                            <select id="wkRegion" class="field-input">
                                     <option value="">${翻译值.autoDetect}</option>
                                     <option value="HK">${翻译值.regionNames.HK}</option>
                                     <option value="US">${翻译值.regionNames.US}</option>
@@ -5577,52 +7235,53 @@ async function 处理订阅值(请求241, 用户240 = null) {
                                     <option value="FI">${翻译值.regionNames.FI}</option>
                                     <option value="GB">${翻译值.regionNames.GB}</option>
                             </select>
-                                <small id="wkRegionHint" style="color: #7aa9c4; font-size: 0.85rem; display: none;">⚠️ ${翻译值.customIPDisabledHint}</small>
+                                <!-- wkRegionHint: JS toggles this hint via style.display -->
+                                <small id="wkRegionHint" class="field-hint is-hidden">${翻译值.customIPDisabledHint}</small>
                         </div>
                     </form>
-                    <form id="otherConfigForm" style="margin-bottom: 20px;">
-                        <div style="margin-bottom: 15px;">
-                                <label style="display: block; margin-bottom: 8px; color: #00f0ff; font-weight: bold; text-shadow: 0 0 3px #00f0ff;">${翻译值.protocolSelection}</label>
-                            <div style="padding: 15px; background: rgba(15, 3, 40, 0.6); border: 1px solid #00f0ff; border-radius: 5px;">
-                                <div style="margin-bottom: 10px;">
-                                    <label style="display: inline-flex; align-items: center; cursor: pointer; color: #00f0ff;">
-                                        <input type="checkbox" id="ev" checked style="margin-right: 8px; width: 18px; height: 18px; cursor: pointer;">
-                                            <span style="font-size: 1.1rem;">${翻译值.enableProtoV}</span>
+                    <form id="otherConfigForm" class="form-block">
+                        <div class="field">
+                                <label class="field-label">${翻译值.protocolSelection}</label>
+                            <div class="panel">
+                                <div class="checkbox-row-wrap">
+                                    <label class="checkbox-row">
+                                        <input type="checkbox" id="ev" checked class="checkbox-input">
+                                            <span class="checkbox-text">${翻译值.enableProtoV}</span>
                                     </label>
                                 </div>
-                                <div style="margin-bottom: 10px;">
-                                    <label style="display: inline-flex; align-items: center; cursor: pointer; color: #00f0ff;">
-                                        <input type="checkbox" id="et" style="margin-right: 8px; width: 18px; height: 18px; cursor: pointer;">
-                                            <span style="font-size: 1.1rem;">${翻译值.enableProtoT}</span>
+                                <div class="checkbox-row-wrap">
+                                    <label class="checkbox-row">
+                                        <input type="checkbox" id="et" class="checkbox-input">
+                                            <span class="checkbox-text">${翻译值.enableProtoT}</span>
                                     </label>
                                 </div>
-                                <div style="margin-bottom: 10px;">
-                                    <label style="display: inline-flex; align-items: center; cursor: pointer; color: #00f0ff;">
-                                        <input type="checkbox" id="ex" style="margin-right: 8px; width: 18px; height: 18px; cursor: pointer;">
-                                            <span style="font-size: 1.1rem;">${翻译值.enableXhttp}</span>
+                                <div class="checkbox-row-wrap">
+                                    <label class="checkbox-row">
+                                        <input type="checkbox" id="ex" class="checkbox-input">
+                                            <span class="checkbox-text">${翻译值.enableXhttp}</span>
                                     </label>
                                 </div>
-                                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(0, 240, 255, 0.3);">
-                                    <div style="margin-bottom: 10px;">
-                                        <label style="display: inline-flex; align-items: center; cursor: pointer; color: #00f0ff;">
-                                            <input type="checkbox" id="ech" style="margin-right: 8px; width: 18px; height: 18px; cursor: pointer;">
-                                                <span style="font-size: 1.1rem;">${翻译值.enableECH}</span>
+                                <div class="panel-section">
+                                    <div class="checkbox-row-wrap">
+                                        <label class="checkbox-row">
+                                            <input type="checkbox" id="ech" class="checkbox-input">
+                                                <span class="checkbox-text">${翻译值.enableECH}</span>
                                         </label>
-                                        <small style="color: #7aa9c4; font-size: 0.8rem; display: block; margin-top: 5px; margin-left: 26px;">${翻译值.enableECHHint}</small>
+                                        <small class="field-hint field-hint-indent">${翻译值.enableECHHint}</small>
                                     </div>
-                                    <div style="margin-top: 15px; margin-bottom: 10px;">
-                                        <label style="display: block; margin-bottom: 8px; color: #00f0ff; font-size: 0.95rem;">${翻译值.customDNS}</label>
-                                        <input type="text" id="customDNS" placeholder="${翻译值.customDNSPlaceholder}" style="width: 100%; padding: 10px; background: rgba(0, 0, 0, 0.8); border: 1px solid #00f0ff; color: #00f0ff; font-family: 'Courier New', monospace; font-size: 13px;">
-                                        <small style="color: #7aa9c4; font-size: 0.8rem; display: block; margin-top: 5px;">${翻译值.customDNSHint}</small>
+                                    <div class="field field-tight">
+                                        <label class="field-label field-label-sm">${翻译值.customDNS}</label>
+                                        <input type="text" id="customDNS" placeholder="${翻译值.customDNSPlaceholder}" class="field-input field-input-sm">
+                                        <small class="field-hint">${翻译值.customDNSHint}</small>
                                     </div>
-                                    <div style="margin-bottom: 10px;">
-                                        <label style="display: block; margin-bottom: 8px; color: #00f0ff; font-size: 0.95rem;">${翻译值.customECHDomain}</label>
-                                        <input type="text" id="customECHDomain" placeholder="${翻译值.customECHDomainPlaceholder}" style="width: 100%; padding: 10px; background: rgba(0, 0, 0, 0.8); border: 1px solid #00f0ff; color: #00f0ff; font-family: 'Courier New', monospace; font-size: 13px;">
-                                        <small style="color: #7aa9c4; font-size: 0.8rem; display: block; margin-top: 5px;">${翻译值.customECHDomainHint}</small>
+                                    <div class="field field-tight">
+                                        <label class="field-label field-label-sm">${翻译值.customECHDomain}</label>
+                                        <input type="text" id="customECHDomain" placeholder="${翻译值.customECHDomainPlaceholder}" class="field-input field-input-sm">
+                                        <small class="field-hint">${翻译值.customECHDomainHint}</small>
                                     </div>
-                                    <div style="margin-bottom: 10px;">
-                                        <label style="display: block; margin-bottom: 8px; color: #00f0ff; font-size: 0.95rem;">${翻译值.alpn}</label>
-                                        <select id="alpn" style="width: 100%; padding: 10px; background: rgba(0, 0, 0, 0.8); border: 1px solid #00f0ff; color: #00f0ff; font-family: 'Courier New', monospace; font-size: 13px;">
+                                    <div class="field field-tight">
+                                        <label class="field-label field-label-sm">${翻译值.alpn}</label>
+                                        <select id="alpn" class="field-input field-input-sm">
                                             <option value="">${翻译值.alpnDefault}</option>
                                             <option value="h3">h3</option>
                                             <option value="h2">h2</option>
@@ -5631,264 +7290,273 @@ async function 处理订阅值(请求241, 用户240 = null) {
                                             <option value="h2,http/1.1">h2,http/1.1</option>
                                             <option value="h3,h2,http/1.1">h3,h2,http/1.1</option>
                                         </select>
-                                        <small style="color: #7aa9c4; font-size: 0.8rem; display: block; margin-top: 5px;">${翻译值.alpnHint}</small>
+                                        <small class="field-hint">${翻译值.alpnHint}</small>
                                     </div>
                                 </div>
-                                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(0, 240, 255, 0.3);">
-                                        <label style="display: block; margin-bottom: 8px; color: #00f0ff; font-size: 0.95rem;">${翻译值.altPassword}</label>
-                                        <input type="text" id="tp" placeholder="${翻译值.altPasswordPlaceholder}" style="width: 100%; padding: 10px; background: rgba(0, 0, 0, 0.8); border: 1px solid #00f0ff; color: #00f0ff; font-family: 'Courier New', monospace; font-size: 13px;">
-                                        <small style="color: #7aa9c4; font-size: 0.8rem; display: block; margin-top: 5px;">${翻译值.altPasswordHint}</small>
+                                <div class="panel-section">
+                                        <label class="field-label field-label-sm">${翻译值.altPassword}</label>
+                                        <input type="text" id="tp" placeholder="${翻译值.altPasswordPlaceholder}" class="field-input field-input-sm">
+                                        <small class="field-hint">${翻译值.altPasswordHint}</small>
                                 </div>
-                                    <small style="color: #7aa9c4; font-size: 0.85rem; display: block; margin-top: 10px;">${翻译值.protocolHint}</small>
+                                    <small class="field-hint field-hint-block">${翻译值.protocolHint}</small>
                             </div>
                         </div>
-                        <div style="margin-bottom: 15px;">
-                                <label style="display: block; margin-bottom: 8px; color: #00f0ff; font-weight: bold; text-shadow: 0 0 3px #00f0ff;">${翻译值.customHomepage}</label>
-                                <input type="text" id="customHomepage" placeholder="${翻译值.customHomepagePlaceholder}" style="width: 100%; padding: 12px; background: rgba(0, 0, 0, 0.8); border: 2px solid #00f0ff; color: #00f0ff; font-family: 'Courier New', monospace; font-size: 14px;">
-                                <small style="color: #7aa9c4; font-size: 0.85rem;">${翻译值.customHomepageHint}</small>
+                        <div class="field">
+                                <label class="field-label">${翻译值.customHomepage}</label>
+                                <input type="text" id="customHomepage" placeholder="${翻译值.customHomepagePlaceholder}" class="field-input">
+                                <small class="field-hint">${翻译值.customHomepageHint}</small>
                         </div>
-                        <div style="margin-bottom: 15px;">
-                                <label style="display: block; margin-bottom: 8px; color: #00f0ff; font-weight: bold; text-shadow: 0 0 3px #00f0ff;">${翻译值.customPath}</label>
-                                <input type="text" id="customPath" placeholder="${是否值236 ? 'مثال: /mypath یا خالی بگذارید تا از UUID استفاده شود' : '例如: /mypath 或留空使用 UUID'}" style="width: 100%; padding: 12px; background: rgba(0, 0, 0, 0.8); border: 2px solid #00f0ff; color: #00f0ff; font-family: 'Courier New', monospace; font-size: 14px;">
-                                <small style="color: #7aa9c4; font-size: 0.85rem;">${是否值236 ? 解码64('2YXYs9uM2LEg2KfYtNiq2LHYp9qpINiz2YHYp9ix2LTbjC4g2Kfar9ixINiu2KfZhNuMINio2q/YsNin2LHbjNivINin2LIgVVVJRCDYqNmHINi52YbZiNin2YYg2YXYs9uM2LEg2KfYs9iq2YHYp9iv2Ycg2YXbjOKAjNi02YjYry4=') : 解码64('6Ieq5a6a5LmJ6K6i6ZiF6Lev5b6E44CC55WZ56m65YiZ5L2/55SoIFVVSUQg5L2c5Li66Lev5b6E44CC')}</small>
+                        <div class="field">
+                                <label class="field-label">${翻译值.customPath}</label>
+                                <input type="text" id="customPath" placeholder="${是否值236 ? 'مثال: /mypath یا خالی بگذارید تا از UUID استفاده شود' : '例如: /mypath 或留空使用 UUID'}" class="field-input">
+                                <small class="field-hint">${是否值236 ? 解码64('2YXYs9uM2LEg2KfYtNiq2LHYp9qpINiz2YHYp9ix2LTbjC4g2Kfar9ixINiu2KfZhNuMINio2q/YsNin2LHbjNivINin2LIgVVVJRCDYqNmHINi52YbZiNin2YYg2YXYs9uM2LEg2KfYs9iq2YHYp9iv2Ycg2YXbjOKAjNi02YjYry4=') : 解码64('6Ieq5a6a5LmJ6K6i6ZiF6Lev5b6E44CC55WZ56m65YiZ5L2/55SoIFVVSUQg5L2c5Li66Lev5b6E44CC')}</small>
                         </div>
-                        <div style="margin-bottom: 15px;">
-                                <label style="display: block; margin-bottom: 8px; color: #00f0ff; font-weight: bold; text-shadow: 0 0 3px #00f0ff;">${翻译值.customIP}</label>
-                                <input type="text" id="customIP" placeholder="${是否值236 ? 'مثال: 1.2.3.4:443' : '例如: 1.2.3.4:443'}" style="width: 100%; padding: 12px; background: rgba(0, 0, 0, 0.8); border: 2px solid #00f0ff; color: #00f0ff; font-family: 'Courier New', monospace; font-size: 14px;">
-                                <small style="color: #7aa9c4; font-size: 0.85rem;">${是否值236 ? 解码64('2KLYr9ix2LMg2Ygg2b7ZiNix2KogUHJveHlJUCDYs9mB2KfYsdi024w=') : 解码64('6Ieq5a6a5LmJUHJveHlJUOWcsOWdgOWSjOerr+WPow==')}</small>
+                        <div class="field">
+                                <label class="field-label">${翻译值.customIP}</label>
+                                <input type="text" id="customIP" placeholder="${是否值236 ? 'مثال: 1.2.3.4:443' : '例如: 1.2.3.4:443'}" class="field-input">
+                                <small class="field-hint">${是否值236 ? 解码64('2KLYr9ix2LMg2Ygg2b7ZiNix2KogUHJveHlJUCDYs9mB2KfYsdi024w=') : 解码64('6Ieq5a6a5LmJUHJveHlJUOWcsOWdgOWSjOerr+WPow==')}</small>
                         </div>
-                        <div style="margin-bottom: 15px;">
-                                <label style="display: block; margin-bottom: 8px; color: #00f0ff; font-weight: bold; text-shadow: 0 0 3px #00f0ff;">${翻译值.preferredIPs}</label>
-                                <input type="text" id="yx" placeholder="${是否值236 ? 'مثال: 1.2.3.4:443#گره هنگ‌کنگ,5.6.7.8:80#گره آمریکا,example.com:8443#گره سنگاپور' : '例如: 1.2.3.4:443#日本节点,5.6.7.8:80#美国节点,example.com:8443#新加坡节点'}" style="width: 100%; padding: 12px; background: rgba(0, 0, 0, 0.8); border: 2px solid #00f0ff; color: #00f0ff; font-family: 'Courier New', monospace; font-size: 14px;">
-                                <small style="color: #7aa9c4; font-size: 0.85rem;">${是否值236 ? 'فرمت: IP:پورت#نام گره یا IP:پورت (بدون # از نام پیش‌فرض استفاده می‌شود). پشتیبانی از چندین مورد، با کاما جدا می‌شوند. <span style="color: #ffb400;">IP های اضافه شده از طریق API به طور خودکار در اینجا نمایش داده می‌شوند.</span>' : '格式: IP:端口#节点名称 或 IP:端口 (无#则使用默认名称)。支持多个，用逗号分隔。<span style="color: #ffb400;">API添加的IP会自动显示在这里。</span>'}</small>
+                        <div class="field">
+                                <label class="field-label">${翻译值.preferredIPs}</label>
+                                <input type="text" id="yx" placeholder="${是否值236 ? 'مثال: 1.2.3.4:443#گره هنگ‌کنگ,5.6.7.8:80#گره آمریکا,example.com:8443#گره سنگاپور' : '例如: 1.2.3.4:443#日本节点,5.6.7.8:80#美国节点,example.com:8443#新加坡节点'}" class="field-input">
+                                <small class="field-hint">${是否值236 ? 'فرمت: IP:پورت#نام گره یا IP:پورت (بدون # از نام پیش‌فرض استفاده می‌شود). پشتیبانی از چندین مورد، با کاما جدا می‌شوند. <span class="field-hint-warn">IP های اضافه شده از طریق API به طور خودکار در اینجا نمایش داده می‌شوند.</span>' : '格式: IP:端口#节点名称 或 IP:端口 (无#则使用默认名称)。支持多个，用逗号分隔。<span class="field-hint-warn">API添加的IP会自动显示在这里。</span>'}</small>
                         </div>
-                        <div style="margin-bottom: 15px;">
-                                <label style="display: block; margin-bottom: 8px; color: #00f0ff; font-weight: bold; text-shadow: 0 0 3px #00f0ff;">${翻译值.preferredIPsURL}</label>
-                                <input type="text" id="yxURL" placeholder="${是否值236 ? 'URL منبع لیست IP ترجیحی را وارد کنید' : '输入优选IP列表来源URL'}" style="width: 100%; padding: 12px; background: rgba(0, 0, 0, 0.8); border: 2px solid #00f0ff; color: #00f0ff; font-family: 'Courier New', monospace; font-size: 14px;">
-                                <small style="color: #7aa9c4; font-size: 0.85rem;">${是否值236 ? 'URL منبع لیست IP ترجیحی سفارشی، اگر خالی بگذارید از آدرس پیش‌فرض استفاده می‌شود' : '自定义优选IP列表来源URL，留空则使用默认地址'}</small>
+                        <div class="field">
+                                <label class="field-label">${翻译值.preferredIPsURL}</label>
+                                <input type="text" id="yxURL" placeholder="${是否值236 ? 'URL منبع لیست IP ترجیحی را وارد کنید' : '输入优选IP列表来源URL'}" class="field-input">
+                                <small class="field-hint">${是否值236 ? 'URL منبع لیست IP ترجیحی سفارشی، اگر خالی بگذارید از آدرس پیش‌فرض استفاده می‌شود' : '自定义优选IP列表来源URL，留空则使用默认地址'}</small>
                         </div>
                         
-                        <div style="margin-bottom: 20px; padding: 15px; background: rgba(20, 5, 50, 0.6); border: 2px solid #7aa9c4; border-radius: 8px;">
-                            <h4 style="color: #00f0ff; margin: 0 0 15px 0; font-size: 1.1rem; text-shadow: 0 0 5px #00f0ff;">⚡ ${翻译值.latencyTest}</h4>
-                            <div style="display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; align-items: center;">
-                                <div style="min-width: 120px;">
-                                    <label style="display: block; margin-bottom: 5px; color: #00f0ff; font-size: 0.9rem;">${翻译值.ipSource}</label>
-                                    <select id="ipSourceSelect" style="width: 100%; padding: 10px; background: rgba(0, 0, 0, 0.8); border: 1px solid #00f0ff; color: #00f0ff; font-family: 'Courier New', monospace; font-size: 13px; cursor: pointer;">
+                        <div class="panel panel-latency">
+                            <h4 class="panel-title">${翻译值.latencyTest}</h4>
+                            <div class="field-row">
+                                <div class="field field-inline field-w120">
+                                    <label class="field-label field-label-sm">${翻译值.ipSource}</label>
+                                    <select id="ipSourceSelect" class="field-input field-input-sm">
                                         <option value="manual">${翻译值.manualInput}</option>
                                         <option value="cfRandom">${翻译值.cfRandomIP}</option>
                                         <option value="urlFetch">${翻译值.urlFetch}</option>
                                     </select>
                                 </div>
-                                <div style="width: 100px;">
-                                    <label style="display: block; margin-bottom: 5px; color: #00f0ff; font-size: 0.9rem;">${翻译值.latencyTestPort}</label>
-                                    <input type="number" id="latencyTestPort" value="443" min="1" max="65535" style="width: 100%; padding: 10px; background: rgba(0, 0, 0, 0.8); border: 1px solid #00f0ff; color: #00f0ff; font-family: 'Courier New', monospace; font-size: 13px;">
+                                <div class="field field-inline field-w100">
+                                    <label class="field-label field-label-sm">${翻译值.latencyTestPort}</label>
+                                    <input type="number" id="latencyTestPort" value="443" min="1" max="65535" class="field-input field-input-sm">
                                 </div>
-                                <div id="randomCountDiv" style="width: 100px; display: none;">
-                                    <label style="display: block; margin-bottom: 5px; color: #00f0ff; font-size: 0.9rem;">${翻译值.randomCount}</label>
-                                    <input type="number" id="randomIPCount" value="20" min="1" max="100" style="width: 100%; padding: 10px; background: rgba(0, 0, 0, 0.8); border: 1px solid #00f0ff; color: #00f0ff; font-family: 'Courier New', monospace; font-size: 13px;">
+                                <!-- randomCountDiv: JS toggles this panel via style.display -->
+                                <div id="randomCountDiv" class="field field-inline field-w100 is-hidden">
+                                    <label class="field-label field-label-sm">${翻译值.randomCount}</label>
+                                    <input type="number" id="randomIPCount" value="20" min="1" max="100" class="field-input field-input-sm">
                                 </div>
-                                <div style="width: 80px;">
-                                    <label style="display: block; margin-bottom: 5px; color: #00f0ff; font-size: 0.9rem;">${是否值236 ? 'رشته‌ها' : '线程'}</label>
-                                    <input type="number" id="testThreads" value="5" min="1" max="50" style="width: 100%; padding: 10px; background: rgba(0, 0, 0, 0.8); border: 1px solid #00f0ff; color: #00f0ff; font-family: 'Courier New', monospace; font-size: 13px;">
-                                </div>
-                            </div>
-                            <div id="manualInputDiv" style="margin-bottom: 10px;">
-                                <label style="display: block; margin-bottom: 5px; color: #00f0ff; font-size: 0.9rem;">${翻译值.latencyTestIP}</label>
-                                <input type="text" id="latencyTestInput" placeholder="${翻译值.latencyTestIPPlaceholder}" style="width: 100%; padding: 10px; background: rgba(0, 0, 0, 0.8); border: 1px solid #00f0ff; color: #00f0ff; font-family: 'Courier New', monospace; font-size: 13px;">
-                            </div>
-                            <div id="urlFetchDiv" style="margin-bottom: 10px; display: none;">
-                                <label style="display: block; margin-bottom: 5px; color: #00f0ff; font-size: 0.9rem;">${翻译值.fetchURL}</label>
-                                <div style="display: flex; gap: 8px;">
-                                    <input type="text" id="fetchURLInput" placeholder="${翻译值.fetchURLPlaceholder}" style="flex: 1; padding: 10px; background: rgba(0, 0, 0, 0.8); border: 1px solid #00f0ff; color: #00f0ff; font-family: 'Courier New', monospace; font-size: 13px;">
-                                    <button type="button" id="fetchIPBtn" style="background: rgba(0, 200, 255, 0.2); border: 1px solid #00aaff; padding: 8px 16px; color: #00aaff; font-family: 'Courier New', monospace; cursor: pointer; white-space: nowrap;">⬇ ${翻译值.fetchIP}</button>
+                                <div class="field field-inline field-w80">
+                                    <label class="field-label field-label-sm">${是否值236 ? 'رشته‌ها' : '线程'}</label>
+                                    <input type="number" id="testThreads" value="5" min="1" max="50" class="field-input field-input-sm">
                                 </div>
                             </div>
-                            <div id="cfRandomDiv" style="margin-bottom: 10px; display: none;">
-                                <button type="button" id="generateCFIPBtn" style="background: rgba(0, 240, 255, 0.15); border: 1px solid #00f0ff; padding: 10px 20px; color: #00f0ff; font-family: 'Courier New', monospace; cursor: pointer; width: 100%; transition: all 0.3s;">🎲 ${翻译值.generateIP}</button>
+                            <!-- manualInputDiv: JS toggles this panel via style.display -->
+                            <div id="manualInputDiv" class="field field-tight">
+                                <label class="field-label field-label-sm">${翻译值.latencyTestIP}</label>
+                                <input type="text" id="latencyTestInput" placeholder="${翻译值.latencyTestIPPlaceholder}" class="field-input field-input-sm">
                             </div>
-                            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                                <button type="button" id="startLatencyTest" style="background: rgba(0, 240, 255, 0.2); border: 1px solid #00f0ff; padding: 8px 16px; color: #00f0ff; font-family: 'Courier New', monospace; cursor: pointer; transition: all 0.3s;">▶ ${翻译值.startTest}</button>
-                                <button type="button" id="stopLatencyTest" style="background: rgba(255, 0, 0, 0.2); border: 1px solid #ff3860; padding: 8px 16px; color: #ff3860; font-family: 'Courier New', monospace; cursor: pointer; display: none; transition: all 0.3s;">⏹ ${翻译值.stopTest}</button>
+                            <!-- urlFetchDiv: JS toggles this panel via style.display -->
+                            <div id="urlFetchDiv" class="field field-tight is-hidden">
+                                <label class="field-label field-label-sm">${翻译值.fetchURL}</label>
+                                <div class="field-row-tight">
+                                    <input type="text" id="fetchURLInput" placeholder="${翻译值.fetchURLPlaceholder}" class="field-input field-input-sm field-input-grow">
+                                    <button type="button" id="fetchIPBtn" class="btn btn-primary btn-nowrap"><svg class="icon" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path fill="currentColor" d creator="M8 1v8.6l3.3-3.3 1.4 1.4L8 12.4 2.3 7.7l1.4-1.4L7 9.6V1h1z"/><path fill="currentColor" d="M2 13h12v2H2z"/></svg>${翻译值.fetchIP}</button>
+                                </div>
                             </div>
-                            <div id="latencyTestStatus" style="color: #7aa9c4; font-size: 0.9rem; margin-bottom: 10px; display: none;"></div>
-                            <div id="latencyTestResults" style="max-height: 250px; overflow-y: auto; display: none;">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                                    <span style="color: #00f0ff; font-weight: bold;">${翻译值.testResult}</span>
-                                    <div style="display: flex; gap: 8px;">
-                                        <button type="button" id="selectAllResults" style="background: transparent; border: 1px solid #7aa9c4; padding: 4px 10px; color: #7aa9c4; font-size: 0.8rem; cursor: pointer;">${翻译值.selectAll}</button>
-                                        <button type="button" id="deselectAllResults" style="background: transparent; border: 1px solid #7aa9c4; padding: 4px 10px; color: #7aa9c4; font-size: 0.8rem; cursor: pointer;">${翻译值.deselectAll}</button>
+                            <!-- cfRandomDiv: JS toggles this panel via style.display -->
+                            <div id="cfRandomDiv" class="field field-tight is-hidden">
+                                <button type="button" id="generateCFIPBtn" class="btn btn-primary btn-block"><svg class="icon" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M2 2h3v3H2V2zm9 0h3v3h-3V2zM2 11h3v3H2v-3zm9.5 0H13v1.5h-1.5V14H10v-1.5H8.5V11H10V9.5h1.5V11z"/></svg>${翻译值.generateIP}</button>
+                            </div>
+                            <div class="btn-row">
+                                <button type="button" id="startLatencyTest" class="btn btn-primary"><svg class="icon" viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path fill="currentColor" d="M4 2l10 6-10 6V2z"/></svg>${翻译值.startTest}</button>
+                                <!-- stopLatencyTest: JS toggles this button via style.display -->
+                                <button type="button" id="stopLatencyTest" class="btn btn-danger is-hidden"><svg class="icon" viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><rect x="3" y="3" width="10" height="10" fill="currentColor"/></svg>${翻译值.stopTest}</button>
+                            </div>
+                            <!-- latencyTestStatus: JS toggles this panel via style.display -->
+                            <div id="latencyTestStatus" class="field-hint latency-status is-hidden"></div>
+                            <!-- latencyTestResults: JS toggles this panel via style.display -->
+                            <div id="latencyTestResults" class="latency-results is-hidden">
+                                <div class="results-header">
+                                    <span class="results-title">${翻译值.testResult}</span>
+                                    <div class="btn-row-tight">
+                                        <button type="button" id="selectAllResults" class="btn btn-ghost btn-sm">${翻译值.selectAll}</button>
+                                        <button type="button" id="deselectAllResults" class="btn btn-ghost btn-sm">${翻译值.deselectAll}</button>
                                     </div>
                                 </div>
-                                <div id="cityFilterContainer" style="margin-bottom: 10px; padding: 10px; background: rgba(15, 3, 40, 0.6); border: 1px solid #7aa9c4; border-radius: 4px; display: none;">
-                                    <div style="margin-bottom: 8px;">
-                                        <label style="display: inline-flex; align-items: center; cursor: pointer; color: #00f0ff; font-size: 0.9rem;">
-                                            <input type="radio" name="cityFilterMode" value="all" checked style="margin-right: 6px; width: 16px; height: 16px; cursor: pointer;">
+                                <!-- cityFilterContainer: JS toggles this panel via style.display -->
+                                <div id="cityFilterContainer" class="panel panel-filter is-hidden">
+                                    <div class="filter-mode-row">
+                                        <label class="checkbox-row checkbox-row-inline">
+                                            <input type="radio" name="cityFilterMode" value="all" checked class="checkbox-input checkbox-input-sm">
                                             <span>${是否值236 ? '全部城市' : '全部城市'}</span>
                                         </label>
-                                        <label style="display: inline-flex; align-items: center; cursor: pointer; color: #00f0ff; font-size: 0.9rem; margin-left: 15px;">
-                                            <input type="radio" name="cityFilterMode" value="fastest10" style="margin-right: 6px; width: 16px; height: 16px; cursor: pointer;">
+                                        <label class="checkbox-row checkbox-row-inline checkbox-row-spaced">
+                                            <input type="radio" name="cityFilterMode" value="fastest10" class="checkbox-input checkbox-input-sm">
                                             <span>${是否值236 ? '只选择最快的10个' : '只选择最快的10个'}</span>
                                         </label>
                                     </div>
-                                    <div id="cityCheckboxesContainer" style="display: flex; flex-wrap: wrap; gap: 8px; max-height: 80px; overflow-y: auto; padding: 5px;"></div>
+                                    <div id="cityCheckboxesContainer" class="check-group check-group-scroll"></div>
                                 </div>
-                                <div id="latencyResultsList" style="background: rgba(0, 0, 0, 0.5); border: 1px solid #004400; border-radius: 4px; padding: 10px;"></div>
-                                <div style="margin-top: 10px; display: flex; gap: 10px;">
-                                    <button type="button" id="overwriteSelectedToYx" style="flex: 1; background: rgba(0, 220, 130, 0.3); border: 1px solid #00f0ff; padding: 10px 20px; color: #00f0ff; font-family: 'Courier New', monospace; font-weight: bold; cursor: pointer; transition: all 0.3s;">${是否值236 ? '覆盖添加' : '覆盖添加'}</button>
-                                    <button type="button" id="appendSelectedToYx" style="flex: 1; background: rgba(0, 178, 110, 0.3); border: 1px solid #7aa9c4; padding: 10px 20px; color: #7aa9c4; font-family: 'Courier New', monospace; font-weight: bold; cursor: pointer; transition: all 0.3s;">${是否值236 ? '追加添加' : '追加添加'}</button>
+                                <div id="latencyResultsList" class="results-list"></div>
+                                <div class="btn-row btn-row-top">
+                                    <button type="button" id="overwriteSelectedToYx" class="btn btn-primary btn-flex">${是否值236 ? '覆盖添加' : '覆盖添加'}</button>
+                                    <button type="button" id="appendSelectedToYx" class="btn btn-ghost btn-flex">${是否值236 ? '追加添加' : '追加添加'}</button>
                                 </div>
                             </div>
                         </div>
 
-                        <div style="margin-bottom: 15px;">
-                                <label style="display: block; margin-bottom: 8px; color: #00f0ff; font-weight: bold; text-shadow: 0 0 3px #00f0ff;">${翻译值.socks5Config}</label>
-                                <input type="text" id="socksConfig" placeholder="${是否值236 ? 解码64('2YXYq9in2YQ6IHVzZXI6cGFzc0Bob3N0OnBvcnQg24zYpyBodHRwOi8vdXNlcjpwYXNzQGhvc3Q6cG9ydA==') : 解码64('5L6L5aaCOiB1c2VyOnBhc3NAaG9zdDpwb3J0IOaIliBodHRwOi8vdXNlcjpwYXNzQGhvc3Q6cG9ydA==')}" style="width: 100%; padding: 12px; background: rgba(0, 0, 0, 0.8); border: 2px solid #00f0ff; color: #00f0ff; font-family: 'Courier New', monospace; font-size: 14px;">
-                                <small style="color: #7aa9c4; font-size: 0.85rem;">${是否值236 ? 解码64('2KLYr9ix2LMg2b7YsdmI2qnYs9uMINiu2LHZiNis24wg2KjYsdin24wg2KfZhtiq2YLYp9mEINiq2YXYp9mFINiq2LHYp9mB24zaqSDYrtix2YjYrNuMLiDYqNiv2YjZhiDZvtuM2LTZiNmG2K8g2KjZhyDYtdmI2LHYqiBzNSDYr9ixINmG2LjYsSDar9ix2YHYqtmHINmF24zigIzYtNmI2K8=') : 解码64('5Ye656uZ5Luj55CG5Zyw5Z2A77yM55So5LqO6L2s5Y+R5omA5pyJ5Ye656uZ5rWB6YeP44CC5LiN5YaZ5YmN57yA6buY6K6k5oyJIHM1IOWkhOeQhg==')}</small>
+                        <div class="field">
+                                <label class="field-label">${翻译值.socks5Config}</label>
+                                <input type="text" id="socksConfig" placeholder="${是否值236 ? 解码64('2YXYq9in2YQ6IHVzZXI6cGFzc0Bob3N0OnBvcnQg24zYpyBodHRwOi8vdXNlcjpwYXNzQGhvc3Q6cG9ydA==') : 解码64('5L6L5aaCOiB1c2VyOnBhc3NAaG9zdDpwb3J0IOaIliBodHRwOi8vdXNlcjpwYXNzQGhvc3Q6cG9ydA==')}" class="field-input">
+                                <small class="field-hint">${是否值236 ? 解码64('2KLYr9ix2LMg2b7YsdmI2qnYs9uMINiu2LHZiNis24wg2KjYsdin24wg2KfZhtiq2YLYp9mEINiq2YXYp9mFINiq2LHYp9mB24zaqSDYrtix2YjYrNuMLiDYqNiv2YjZhiDZvtuM2LTZiNmG2K8g2KjZhyDYtdmI2LHYqiBzNSDYr9ixINmG2LjYsSDar9ix2YHYqtmHINmF24zigIzYtNmI2K8=') : 解码64('5Ye656uZ5Luj55CG5Zyw5Z2A77yM55So5LqO6L2s5Y+R5omA5pyJ5Ye656uZ5rWB6YeP44CC5LiN5YaZ5YmN57yA6buY6K6k5oyJIHM1IOWkhOeQhg==')}</small>
                         </div>
                     </form>
 
-                    <h3 style="color: #00f0ff; margin: 20px 0 15px 0; font-size: 1.2rem;">${翻译值.advancedControl}</h3>
-                    <form id="advancedConfigForm" style="margin-bottom: 20px;">
-                        <div style="margin-bottom: 15px;">
-                                <label style="display: block; margin-bottom: 8px; color: #00f0ff; font-weight: bold; text-shadow: 0 0 3px #00f0ff;">${翻译值.subscriptionConverter}</label>
-                                <input type="text" id="scu" placeholder="${翻译值.subscriptionConverterPlaceholder}" style="width: 100%; padding: 12px; background: rgba(0, 0, 0, 0.8); border: 2px solid #00f0ff; color: #00f0ff; font-family: 'Courier New', monospace; font-size: 14px;">
-                                <small style="color: #7aa9c4; font-size: 0.85rem;">${翻译值.subscriptionConverterHint}</small>
+                    <h3 class="section-heading">${翻译值.advancedControl}</h3>
+                    <form id="advancedConfigForm" class="form-block">
+                        <div class="field">
+                                <label class="field-label">${翻译值.subscriptionConverter}</label>
+                                <input type="text" id="scu" placeholder="${翻译值.subscriptionConverterPlaceholder}" class="field-input">
+                                <small class="field-hint">${翻译值.subscriptionConverterHint}</small>
                         </div>
-                        <div style="margin-bottom: 15px;">
-                                <label style="display: block; margin-bottom: 8px; color: #00f0ff; font-weight: bold; text-shadow: 0 0 3px #00f0ff;">${翻译值.builtinPreferred}</label>
-                            <div style="padding: 15px; background: rgba(15, 3, 40, 0.6); border: 1px solid #00f0ff; border-radius: 5px;">
-                                <div style="margin-bottom: 10px;">
-                                    <label style="display: inline-flex; align-items: center; cursor: pointer; color: #00f0ff;">
-                                        <input type="checkbox" id="ena" style="margin-right: 8px; width: 18px; height: 18px; cursor: pointer;">
-                                            <span style="font-size: 1.1rem;">${翻译值.enableNativeAddress}</span>
+                        <div class="field">
+                                <label class="field-label">${翻译值.builtinPreferred}</label>
+                            <div class="panel">
+                                <div class="checkbox-row-wrap">
+                                    <label class="checkbox-row">
+                                        <input type="checkbox" id="ena" class="checkbox-input">
+                                            <span class="checkbox-text">${翻译值.enableNativeAddress}</span>
                                     </label>
                                 </div>
-                                <div style="margin-bottom: 10px;">
-                                    <label style="display: inline-flex; align-items: center; cursor: pointer; color: #00f0ff;">
-                                        <input type="checkbox" id="epd" checked style="margin-right: 8px; width: 18px; height: 18px; cursor: pointer;">
-                                            <span style="font-size: 1.1rem;">${翻译值.enablePreferredDomain}</span>
+                                <div class="checkbox-row-wrap">
+                                    <label class="checkbox-row">
+                                        <input type="checkbox" id="epd" checked class="checkbox-input">
+                                            <span class="checkbox-text">${翻译值.enablePreferredDomain}</span>
                                     </label>
                                 </div>
-                                <div style="margin-bottom: 10px;">
-                                    <label style="display: inline-flex; align-items: center; cursor: pointer; color: #00f0ff;">
-                                        <input type="checkbox" id="epi" checked style="margin-right: 8px; width: 18px; height: 18px; cursor: pointer;">
-                                            <span style="font-size: 1.1rem;">${翻译值.enablePreferredIP}</span>
+                                <div class="checkbox-row-wrap">
+                                    <label class="checkbox-row">
+                                        <input type="checkbox" id="epi" checked class="checkbox-input">
+                                            <span class="checkbox-text">${翻译值.enablePreferredIP}</span>
                                     </label>
                                 </div>
-                                <div style="margin-bottom: 10px;">
-                                    <label style="display: inline-flex; align-items: center; cursor: pointer; color: #00f0ff;">
-                                        <input type="checkbox" id="egi" checked style="margin-right: 8px; width: 18px; height: 18px; cursor: pointer;">
-                                            <span style="font-size: 1.1rem;">${翻译值.enableGitHubPreferred}</span>
+                                <div class="checkbox-row-wrap">
+                                    <label class="checkbox-row">
+                                        <input type="checkbox" id="egi" checked class="checkbox-input">
+                                            <span class="checkbox-text">${翻译值.enableGitHubPreferred}</span>
                                     </label>
                                 </div>
-                                    <small style="color: #7aa9c4; font-size: 0.85rem; display: block; margin-top: 10px;">${翻译值.builtinPreferredHint}</small>
+                                    <small class="field-hint field-hint-block">${翻译值.builtinPreferredHint}</small>
                             </div>
                         </div>
-                        <div style="margin-bottom: 15px;">
-                                <label style="display: block; margin-bottom: 8px; color: #00f0ff; font-weight: bold; text-shadow: 0 0 3px #00f0ff;">${翻译值.jkSection}</label>
-                            <div style="padding: 15px; background: rgba(15, 3, 40, 0.6); border: 1px solid #00f0ff; border-radius: 5px;">
-                                <label style="display: inline-flex; align-items: center; cursor: pointer; color: #00f0ff;">
-                                    <input type="checkbox" id="jk" style="margin-right: 8px; width: 18px; height: 18px; cursor: pointer;">
-                                        <span style="font-size: 1.1rem;">${翻译值.jkEnable}</span>
+                        <div class="field">
+                                <label class="field-label">${翻译值.jkSection}</label>
+                            <div class="panel">
+                                <label class="checkbox-row">
+                                    <input type="checkbox" id="jk" class="checkbox-input">
+                                        <span class="checkbox-text">${翻译值.jkEnable}</span>
                                 </label>
-                                    <small style="color: #7aa9c4; font-size: 0.85rem; display: block; margin-top: 10px;">${翻译值.jkHint}</small>
+                                    <small class="field-hint field-hint-block">${翻译值.jkHint}</small>
                             </div>
                         </div>
-                        <div style="margin-bottom: 15px;">
-                                <label style="display: block; margin-bottom: 8px; color: #00f0ff; font-weight: bold; text-shadow: 0 0 3px #00f0ff;">优选IP筛选设置</label>
-                            <div style="padding: 15px; background: rgba(15, 3, 40, 0.6); border: 1px solid #00f0ff; border-radius: 5px;">
-                                <div style="margin-bottom: 15px;">
-                                    <label style="display: block; margin-bottom: 8px; color: #00f0ff; font-weight: bold; text-shadow: 0 0 3px #00f0ff;">IP版本选择</label>
-                                    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-                                        <label style="display: inline-flex; align-items: center; cursor: pointer; color: #00f0ff;">
-                                            <input type="checkbox" id="ipv4Enabled" checked style="margin-right: 8px; width: 18px; height: 18px; cursor: pointer;">
-                                            <span style="font-size: 1rem;">IPv4</span>
+                        <div class="field">
+                                <label class="field-label">优选IP筛选设置</label>
+                            <div class="panel">
+                                <div class="field field-tight">
+                                    <label class="field-label">IP版本选择</label>
+                                    <div class="check-group">
+                                        <label class="checkbox-row">
+                                            <input type="checkbox" id="ipv4Enabled" checked class="checkbox-input">
+                                            <span class="checkbox-text-sm">IPv4</span>
                                         </label>
-                                        <label style="display: inline-flex; align-items: center; cursor: pointer; color: #00f0ff;">
-                                            <input type="checkbox" id="ipv6Enabled" checked style="margin-right: 8px; width: 18px; height: 18px; cursor: pointer;">
-                                            <span style="font-size: 1rem;">IPv6</span>
+                                        <label class="checkbox-row">
+                                            <input type="checkbox" id="ipv6Enabled" checked class="checkbox-input">
+                                            <span class="checkbox-text-sm">IPv6</span>
                                         </label>
                                     </div>
                                 </div>
-                                <div style="margin-bottom: 10px;">
-                                    <label style="display: block; margin-bottom: 8px; color: #00f0ff; font-weight: bold; text-shadow: 0 0 3px #00f0ff;">运营商选择</label>
-                                    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-                                        <label style="display: inline-flex; align-items: center; cursor: pointer; color: #00f0ff;">
-                                            <input type="checkbox" id="ispMobile" checked style="margin-right: 8px; width: 18px; height: 18px; cursor: pointer;">
-                                            <span style="font-size: 1rem;">移动</span>
+                                <div class="field field-tight">
+                                    <label class="field-label">运营商选择</label>
+                                    <div class="check-group">
+                                        <label class="checkbox-row">
+                                            <input type="checkbox" id="ispMobile" checked class="checkbox-input">
+                                            <span class="checkbox-text-sm">移动</span>
                                         </label>
-                                        <label style="display: inline-flex; align-items: center; cursor: pointer; color: #00f0ff;">
-                                            <input type="checkbox" id="ispUnicom" checked style="margin-right: 8px; width: 18px; height: 18px; cursor: pointer;">
-                                            <span style="font-size: 1rem;">联通</span>
+                                        <label class="checkbox-row">
+                                            <input type="checkbox" id="ispUnicom" checked class="checkbox-input">
+                                            <span class="checkbox-text-sm">联通</span>
                                         </label>
-                                        <label style="display: inline-flex; align-items: center; cursor: pointer; color: #00f0ff;">
-                                            <input type="checkbox" id="ispTelecom" checked style="margin-right: 8px; width: 18px; height: 18px; cursor: pointer;">
-                                            <span style="font-size: 1rem;">电信</span>
+                                        <label class="checkbox-row">
+                                            <input type="checkbox" id="ispTelecom" checked class="checkbox-input">
+                                            <span class="checkbox-text-sm">电信</span>
                                         </label>
                                     </div>
                                 </div>
-                                    <small style="color: #7aa9c4; font-size: 0.85rem; display: block; margin-top: 10px;">选择要使用的IP版本和运营商，未选中的将被过滤</small>
+                                    <small class="field-hint field-hint-block">选择要使用的IP版本和运营商，未选中的将被过滤</small>
                             </div>
                         </div>
-                        <div style="margin-bottom: 15px;">
-                                <label style="display: block; margin-bottom: 8px; color: #00f0ff; font-weight: bold; text-shadow: 0 0 3px #00f0ff;">${翻译值.allowAPIManagement}</label>
-                            <select id="apiEnabled" style="width: 100%; padding: 12px; background: rgba(0, 0, 0, 0.8); border: 2px solid #00f0ff; color: #00f0ff; font-family: 'Courier New', monospace; font-size: 14px;">
+                        <div class="field">
+                                <label class="field-label">${翻译值.allowAPIManagement}</label>
+                            <select id="apiEnabled" class="field-input">
                                     <option value="">${翻译值.apiEnabledDefault}</option>
                                     <option value="yes">${翻译值.apiEnabledYes}</option>
                             </select>
-                                <small style="color: #ffb400; font-size: 0.85rem;">${翻译值.apiEnabledHint}</small>
+                                <small class="field-hint field-hint-warn">${翻译值.apiEnabledHint}</small>
                         </div>
-                        <div style="margin-bottom: 15px;">
-                                <label style="display: block; margin-bottom: 8px; color: #00f0ff; font-weight: bold; text-shadow: 0 0 3px #00f0ff;">${翻译值.regionMatching}</label>
-                            <select id="regionMatching" style="width: 100%; padding: 12px; background: rgba(0, 0, 0, 0.8); border: 2px solid #00f0ff; color: #00f0ff; font-family: 'Courier New', monospace; font-size: 14px;">
+                        <div class="field">
+                                <label class="field-label">${翻译值.regionMatching}</label>
+                            <select id="regionMatching" class="field-input">
                                     <option value="">${翻译值.regionMatchingDefault}</option>
                                     <option value="no">${翻译值.regionMatchingNo}</option>
                             </select>
-                                <small style="color: #7aa9c4; font-size: 0.85rem;">${翻译值.regionMatchingHint}</small>
+                                <small class="field-hint">${翻译值.regionMatchingHint}</small>
                         </div>
-                        <div style="margin-bottom: 15px;">
-                                <label style="display: block; margin-bottom: 8px; color: #00f0ff; font-weight: bold; text-shadow: 0 0 3px #00f0ff;">${翻译值.downgradeControl}</label>
-                            <select id="downgradeControl" style="width: 100%; padding: 12px; background: rgba(0, 0, 0, 0.8); border: 2px solid #00f0ff; color: #00f0ff; font-family: 'Courier New', monospace; font-size: 14px;">
+                        <div class="field">
+                                <label class="field-label">${翻译值.downgradeControl}</label>
+                            <select id="downgradeControl" class="field-input">
                                     <option value="">${翻译值.downgradeControlDefault}</option>
                                     <option value="no">${翻译值.downgradeControlNo}</option>
                                     <option value="only">${翻译值.downgradeControlOnly}</option>
                             </select>
-                                <small style="color: #7aa9c4; font-size: 0.85rem;">${翻译值.downgradeControlHint}</small>
+                                <small class="field-hint">${翻译值.downgradeControlHint}</small>
                         </div>
-                        <div style="margin-bottom: 15px;">
-                                <label style="display: block; margin-bottom: 8px; color: #00f0ff; font-weight: bold; text-shadow: 0 0 3px #00f0ff;">${翻译值.tlsControl}</label>
-                            <select id="portControl" style="width: 100%; padding: 12px; background: rgba(0, 0, 0, 0.8); border: 2px solid #00f0ff; color: #00f0ff; font-family: 'Courier New', monospace; font-size: 14px;">
+                        <div class="field">
+                                <label class="field-label">${翻译值.tlsControl}</label>
+                            <select id="portControl" class="field-input">
                                     <option value="">${翻译值.tlsControlDefault}</option>
                                     <option value="yes">${翻译值.tlsControlYes}</option>
                             </select>
-                                <small style="color: #7aa9c4; font-size: 0.85rem;">${翻译值.tlsControlHint}</small>
+                                <small class="field-hint">${翻译值.tlsControlHint}</small>
                         </div>
-                        <div style="margin-bottom: 15px;">
-                                <label style="display: block; margin-bottom: 8px; color: #00f0ff; font-weight: bold; text-shadow: 0 0 3px #00f0ff;">${翻译值.preferredControl}</label>
-                            <select id="preferredControl" style="width: 100%; padding: 12px; background: rgba(0, 0, 0, 0.8); border: 2px solid #00f0ff; color: #00f0ff; font-family: 'Courier New', monospace; font-size: 14px;">
+                        <div class="field">
+                                <label class="field-label">${翻译值.preferredControl}</label>
+                            <select id="preferredControl" class="field-input">
                                     <option value="">${翻译值.preferredControlDefault}</option>
                                     <option value="yes">${翻译值.preferredControlYes}</option>
                             </select>
-                                <small style="color: #7aa9c4; font-size: 0.85rem;">${翻译值.preferredControlHint}</small>
+                                <small class="field-hint">${翻译值.preferredControlHint}</small>
                         </div>
                     </form>
-                    <div id="currentConfig" style="background: rgba(0, 0, 0, 0.9); border: 1px solid #00f0ff; padding: 15px; margin: 10px 0; font-family: 'Courier New', monospace; color: #00f0ff;">
+                    <div id="currentConfig" class="code-block">
                             ${翻译值.loading}
                     </div>
-                    <div id="pathTypeInfo" style="background: rgba(15, 3, 40, 0.7); border: 1px solid #00f0ff; padding: 15px; margin: 10px 0; font-family: 'Courier New', monospace; color: #00f0ff;">
-                            <div style="font-weight: bold; margin-bottom: 8px; color: #00ff9d; text-shadow: 0 0 5px #00ff9d;">${翻译值.currentConfig}</div>
+                    <div id="pathTypeInfo" class="code-block code-block-info">
+                            <div class="code-block-title">${翻译值.currentConfig}</div>
                             <div id="pathTypeStatus">${翻译值.checking}</div>
                     </div>
                 </div>
-                <div id="statusMessage" style="display: none; padding: 10px; margin: 10px 0; border: 1px solid #00f0ff; background: rgba(8, 4, 28, 0.8); color: #00f0ff; text-shadow: 0 0 5px #00f0ff;"></div>
+                <!-- statusMessage: JS toggles this panel via style.display -->
+                <div id="statusMessage" class="status-message is-hidden"></div>
             </div>
             
             <div class="card">
                     <h2 class="card-title">${翻译值.relatedLinks}</h2>
-                <div style="text-align: center; margin: 20px 0;">
-                        <a href="https://github.com/byJoey/cfnew" target="_blank" style="color: #00f0ff; text-decoration: none; margin: 0 20px; font-size: 1.2rem; text-shadow: 0 0 5px #00f0ff;">${翻译值.githubProject}</a>
-                        <a href="https://github.com/byJoey/yx-tools/releases/" target="_blank" rel="noopener noreferrer" style="color: #00f0ff; text-decoration: none; margin: 0 20px; font-size: 1.2rem; text-shadow: 0 0 5px #00f0ff;">${翻译值.优选工具}</a>
-                    <a href="https://www.youtube.com/@joeyblog" target="_blank" style="color: #00f0ff; text-decoration: none; margin: 0 20px; font-size: 1.2rem; text-shadow: 0 0 5px #00f0ff;">YouTube @joeyblog</a>
+                <div class="link-row">
+                        <a href="https://github.com/byJoey/cfnew" target="_blank" class="link-item">${翻译值.githubProject}</a>
+                        <a href="https://github.com/byJoey/yx-tools/releases/" target="_blank" rel="noopener noreferrer" class="link-item">${翻译值.优选工具}</a>
+                    <a href="https://www.youtube.com/@joeyblog" target="_blank" class="link-item">YouTube @joeyblog</a>
                 </div>
             </div>
         </div>
@@ -8016,6 +9684,65 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 });
+</script>
+<script>
+/* Theme skin switcher — purely additive. Persists to localStorage['cp-theme']
+   and reflects the choice on <html data-theme="dark|light">. The page's own
+   logic is untouched. */
+(function () {
+    var KEY = 'cp-theme';
+    var 根 = document.documentElement;
+
+    function 读取() {
+        try {
+            var t = localStorage.getItem(KEY);
+            if (t === 'light' || t === 'dark') return t;
+        } catch (e) {}
+        return 'dark';
+    }
+
+    function 是否波斯() {
+        return (根.getAttribute('lang') || '').toLowerCase().indexOf('fa') === 0;
+    }
+
+    function 应用(主题) {
+        根.setAttribute('data-theme', 主题);
+        var 按钮 = document.getElementById('cpThemeToggle');
+        if (!按钮) return;
+        按钮.setAttribute('data-current', 主题);
+        var 波斯 = 是否波斯();
+        var 名称 = 主题 === 'light' ? (波斯 ? 'روشن' : '浅色') : (波斯 ? 'تیره' : '深色');
+        var 提示 = (波斯 ? 'تغییر پوسته' : '切换主题皮肤') + ' — ' + 名称;
+        var 文字 = document.getElementById('cpThemeLabel');
+        if (文字) 文字.textContent = 名称;
+        按钮.setAttribute('title', 提示);
+        按钮.setAttribute('aria-label', 提示);
+    }
+
+    function 切换() {
+        var 下一个 = 根.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        try { localStorage.setItem(KEY, 下一个); } catch (e) {}
+        应用(下一个);
+    }
+
+    window.切换主题皮肤 = 切换;
+    window.应用主题皮肤 = 应用;
+
+    function 绑定() {
+        var 按钮 = document.getElementById('cpThemeToggle');
+        if (按钮 && !按钮.getAttribute('data-cp-theme-bound')) {
+            按钮.setAttribute('data-cp-theme-bound', '1');
+            按钮.addEventListener('click', 切换);
+        }
+        应用(读取());
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', 绑定);
+    } else {
+        绑定();
+    }
+})();
 </script>
     </body>
     </html>`;
