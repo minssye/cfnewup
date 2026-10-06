@@ -1,0 +1,420 @@
+<body>
+        <div class="matrix-bg"></div>
+        <div class="matrix-code-rain" id="matrixCodeRain"></div>
+            <div class="cp-hud">
+                <span class="cp-hud-line"><span class="cp-hud-label">SYS::</span> ${翻译值.terminal}</span>
+                <span class="cp-hud-line"><span class="cp-hud-label">NODE::</span> NIGHT_CITY</span>
+                <span class="cp-hud-line"><span class="cp-hud-label">LINK::</span> SECURE / ENC</span>
+            </div>
+            <div class="cp-lang-wrapper">
+                <span class="cp-lang-tag">LANG_</span>
+                <select id="languageSelector" onchange="切换语言(this.value)">
+                    <option value="zh" ${!是否值236 ? 'selected' : ''}>🇨🇳 中文</option>
+                    <option value="fa" ${是否值236 ? 'selected' : ''}>🇮🇷 فارسی</option>
+                </select>
+            </div>
+            <button type="button" id="cpFxToggle" class="cp-fx-toggle" onclick="window.切换页面特效()" title="${是否值236 ? 'تغییر افکت‌های صفحه' : '切换页面特效'}" aria-label="FX toggle">
+                <span class="cp-fx-dot" aria-hidden="true"></span>
+                <span id="cpFxLabel">FX: ON</span>
+            </button>
+        <div class="container">
+            <div class="header">
+                    <h1 class="title cp-glitch" data-text="${翻译值.title}">${翻译值.title}</h1>
+                    <p class="subtitle">${翻译值.subtitle}</p>
+            </div>
+            <div class="card">
+                    <h2 class="card-title">${翻译值.selectClient}</h2>
+                <div class="client-grid">
+                    <button class="client-btn" onclick="生成客户端链接(atob('Y2xhc2g='), 'CLASH')">CLASH</button>
+                    <button class="client-btn" onclick="生成客户端链接(atob('Y2xhc2g='), 'STASH')">STASH</button>
+                    <button class="client-btn" onclick="生成客户端链接(atob('c3VyZ2U='), 'SURGE')">SURGE</button>
+                    <button class="client-btn" onclick="生成客户端链接(atob('c2luZ2JveA=='), 'SING-BOX')">SING-BOX</button>
+                    <button class="client-btn" onclick="生成客户端链接(atob('bG9vbg=='), 'LOON')">LOON</button>
+                    <button class="client-btn" onclick="生成客户端链接(atob('cXVhbng='), 'QUANTUMULT X')">QUANTUMULT X</button>
+                    <button class="client-btn" onclick="生成客户端链接(atob('djJyYXk='), 'V2RAY')">V2RAY</button>
+                    <button class="client-btn" onclick="生成客户端链接(atob('djJyYXk='), 'V2RAYNG')">V2RAYNG</button>
+                    <button class="client-btn" onclick="生成客户端链接(atob('djJyYXk='), 'NEKORAY')">NEKORAY</button>
+                    <button class="client-btn" onclick="生成客户端链接(atob('djJyYXk='), 'Shadowrocket')">Shadowrocket</button>
+                    <button class="client-btn" id="jkClientBtn" style="${启用家宽链式 ? '' : 'display: none;'}" onclick="生成客户端链接('vg', '${翻译值.jkClient}')">${翻译值.jkClient}</button>
+                </div>
+                <div class="subscription-url" id="clientSubscriptionUrl"></div>
+            </div>
+            <div class="card">
+                    <h2 class="card-title">${翻译值.systemStatus}</h2>
+                <div id="systemStatus" class="status-panel">
+                        <div class="status-row status-row-title">[ ${翻译值.checking} ]</div>
+                        <div id="regionStatus" class="status-row">${翻译值.workerRegion}${翻译值.checking}</div>
+                        <div id="geoInfo" class="status-row status-row-dim">${翻译值.detectionMethod}${翻译值.checking}</div>
+                        <div id="backupStatus" class="status-row">${翻译值.proxyIPStatus}${翻译值.checking}</div>
+                        <div id="currentIP" class="status-row">${翻译值.currentIP}${翻译值.checking}</div>
+                        <div id="echStatus" class="status-row">ECH状态: ${翻译值.checking}</div>
+                        <div id="regionMatch" class="status-row">${翻译值.regionMatch}${翻译值.checking}</div>
+                        <div id="selectionLogic" class="status-row status-row-dim">${翻译值.selectionLogic}${翻译值.selectionLogicText}</div>
+                </div>
+            </div>
+            <!-- configCard: JS toggles this panel via style.display -->
+            <div class="card is-hidden" id="configCard">
+                    <h2 class="card-title">${翻译值.configManagement}</h2>
+                <div id="kvStatus" class="panel panel-kv">
+                    ${翻译值.kvStatusChecking}
+                </div>
+                <!-- configContent: JS toggles this panel via style.display -->
+                <div id="configContent" class="is-hidden">
+                    <form id="regionForm" class="form-block">
+                        <div class="field">
+                                <label class="field-label">${翻译值.specifyRegion}</label>
+                            <select id="wkRegion" class="field-input">
+                                    <option value="">${翻译值.autoDetect}</option>
+                                    <option value="HK">${翻译值.regionNames.HK}</option>
+                                    <option value="US">${翻译值.regionNames.US}</option>
+                                    <option value="SG">${翻译值.regionNames.SG}</option>
+                                    <option value="JP">${翻译值.regionNames.JP}</option>
+                                    <option value="KR">${翻译值.regionNames.KR}</option>
+                                    <option value="DE">${翻译值.regionNames.DE}</option>
+                                    <option value="SE">${翻译值.regionNames.SE}</option>
+                                    <option value="NL">${翻译值.regionNames.NL}</option>
+                                    <option value="FI">${翻译值.regionNames.FI}</option>
+                                    <option value="GB">${翻译值.regionNames.GB}</option>
+                            </select>
+                                <!-- wkRegionHint: JS toggles this hint via style.display -->
+                                <small id="wkRegionHint" class="field-hint is-hidden">${翻译值.customIPDisabledHint}</small>
+                        </div>
+                    </form>
+                    <form id="otherConfigForm" class="form-block">
+                        <div class="field">
+                                <label class="field-label">${翻译值.protocolSelection}</label>
+                            <div class="panel">
+                                <div class="checkbox-row-wrap">
+                                    <label class="checkbox-row">
+                                        <input type="checkbox" id="ev" checked class="checkbox-input">
+                                            <span class="checkbox-text">${翻译值.enableProtoV}</span>
+                                    </label>
+                                </div>
+                                <div class="checkbox-row-wrap">
+                                    <label class="checkbox-row">
+                                        <input type="checkbox" id="et" class="checkbox-input">
+                                            <span class="checkbox-text">${翻译值.enableProtoT}</span>
+                                    </label>
+                                </div>
+                                <div class="checkbox-row-wrap">
+                                    <label class="checkbox-row">
+                                        <input type="checkbox" id="ex" class="checkbox-input">
+                                            <span class="checkbox-text">${翻译值.enableXhttp}</span>
+                                    </label>
+                                </div>
+                                <div class="panel-section">
+                                    <div class="checkbox-row-wrap">
+                                        <label class="checkbox-row">
+                                            <input type="checkbox" id="ech" class="checkbox-input">
+                                                <span class="checkbox-text">${翻译值.enableECH}</span>
+                                        </label>
+                                        <small class="field-hint field-hint-indent">${翻译值.enableECHHint}</small>
+                                    </div>
+                                    <div class="field field-tight">
+                                        <label class="field-label field-label-sm">${翻译值.customDNS}</label>
+                                        <input type="text" id="customDNS" placeholder="${翻译值.customDNSPlaceholder}" class="field-input field-input-sm">
+                                        <small class="field-hint">${翻译值.customDNSHint}</small>
+                                    </div>
+                                    <div class="field field-tight">
+                                        <label class="field-label field-label-sm">${翻译值.customECHDomain}</label>
+                                        <input type="text" id="customECHDomain" placeholder="${翻译值.customECHDomainPlaceholder}" class="field-input field-input-sm">
+                                        <small class="field-hint">${翻译值.customECHDomainHint}</small>
+                                    </div>
+                                    <div class="field field-tight">
+                                        <label class="field-label field-label-sm">${翻译值.alpn}</label>
+                                        <select id="alpn" class="field-input field-input-sm">
+                                            <option value="">${翻译值.alpnDefault}</option>
+                                            <option value="h3">h3</option>
+                                            <option value="h2">h2</option>
+                                            <option value="http/1.1">http/1.1</option>
+                                            <option value="h3,h2">h3,h2</option>
+                                            <option value="h2,http/1.1">h2,http/1.1</option>
+                                            <option value="h3,h2,http/1.1">h3,h2,http/1.1</option>
+                                        </select>
+                                        <small class="field-hint">${翻译值.alpnHint}</small>
+                                    </div>
+                                </div>
+                                <div class="panel-section">
+                                        <label class="field-label field-label-sm">${翻译值.altPassword}</label>
+                                        <input type="text" id="tp" placeholder="${翻译值.altPasswordPlaceholder}" class="field-input field-input-sm">
+                                        <small class="field-hint">${翻译值.altPasswordHint}</small>
+                                </div>
+                                    <small class="field-hint field-hint-block">${翻译值.protocolHint}</small>
+                            </div>
+                        </div>
+                        <div class="field">
+                                <label class="field-label">${翻译值.customHomepage}</label>
+                                <input type="text" id="customHomepage" placeholder="${翻译值.customHomepagePlaceholder}" class="field-input">
+                                <small class="field-hint">${翻译值.customHomepageHint}</small>
+                        </div>
+                        <div class="field">
+                                <label class="field-label">${翻译值.customPath}</label>
+                                <input type="text" id="customPath" placeholder="${是否值236 ? 'مثال: /mypath یا خالی بگذارید تا از UUID استفاده شود' : '例如: /mypath 或留空使用 UUID'}" class="field-input">
+                                <small class="field-hint">${是否值236 ? 解码64('2YXYs9uM2LEg2KfYtNiq2LHYp9qpINiz2YHYp9ix2LTbjC4g2Kfar9ixINiu2KfZhNuMINio2q/YsNin2LHbjNivINin2LIgVVVJRCDYqNmHINi52YbZiNin2YYg2YXYs9uM2LEg2KfYs9iq2YHYp9iv2Ycg2YXbjOKAjNi02YjYry4=') : 解码64('6Ieq5a6a5LmJ6K6i6ZiF6Lev5b6E44CC55WZ56m65YiZ5L2/55SoIFVVSUQg5L2c5Li66Lev5b6E44CC')}</small>
+                        </div>
+                        <div class="field">
+                                <label class="field-label">${翻译值.customIP}</label>
+                                <input type="text" id="customIP" placeholder="${是否值236 ? 'مثال: 1.2.3.4:443' : '例如: 1.2.3.4:443'}" class="field-input">
+                                <small class="field-hint">${是否值236 ? 解码64('2KLYr9ix2LMg2Ygg2b7ZiNix2KogUHJveHlJUCDYs9mB2KfYsdi024w=') : 解码64('6Ieq5a6a5LmJUHJveHlJUOWcsOWdgOWSjOerr+WPow==')}</small>
+                        </div>
+                        <div class="field">
+                                <label class="field-label">${翻译值.preferredIPs}</label>
+                                <input type="text" id="yx" placeholder="${是否值236 ? 'مثال: 1.2.3.4:443#گره هنگ‌کنگ,5.6.7.8:80#گره آمریکا,example.com:8443#گره سنگاپور' : '例如: 1.2.3.4:443#日本节点,5.6.7.8:80#美国节点,example.com:8443#新加坡节点'}" class="field-input">
+                                <small class="field-hint">${是否值236 ? 'فرمت: IP:پورت#نام گره یا IP:پورت (بدون # از نام پیش‌فرض استفاده می‌شود). پشتیبانی از چندین مورد، با کاما جدا می‌شوند. <span class="field-hint-warn">IP های اضافه شده از طریق API به طور خودکار در اینجا نمایش داده می‌شوند.</span>' : '格式: IP:端口#节点名称 或 IP:端口 (无#则使用默认名称)。支持多个，用逗号分隔。<span class="field-hint-warn">API添加的IP会自动显示在这里。</span>'}</small>
+                        </div>
+                        <div class="field">
+                                <label class="field-label">${翻译值.preferredIPsURL}</label>
+                                <input type="text" id="yxURL" placeholder="${是否值236 ? 'URL منبع لیست IP ترجیحی را وارد کنید' : '输入优选IP列表来源URL'}" class="field-input">
+                                <small class="field-hint">${是否值236 ? 'URL منبع لیست IP ترجیحی سفارشی، اگر خالی بگذارید از آدرس پیش‌فرض استفاده می‌شود' : '自定义优选IP列表来源URL，留空则使用默认地址'}</small>
+                        </div>
+                        
+                        <div class="panel panel-latency">
+                            <h4 class="panel-title">${翻译值.latencyTest}</h4>
+                            <div class="field-row">
+                                <div class="field field-inline field-w120">
+                                    <label class="field-label field-label-sm">${翻译值.ipSource}</label>
+                                    <select id="ipSourceSelect" class="field-input field-input-sm">
+                                        <option value="manual">${翻译值.manualInput}</option>
+                                        <option value="cfRandom">${翻译值.cfRandomIP}</option>
+                                        <option value="urlFetch">${翻译值.urlFetch}</option>
+                                    </select>
+                                </div>
+                                <div class="field field-inline field-w100">
+                                    <label class="field-label field-label-sm">${翻译值.latencyTestPort}</label>
+                                    <input type="number" id="latencyTestPort" value="443" min="1" max="65535" class="field-input field-input-sm">
+                                </div>
+                                <!-- randomCountDiv: JS toggles this panel via style.display -->
+                                <div id="randomCountDiv" class="field field-inline field-w100 is-hidden">
+                                    <label class="field-label field-label-sm">${翻译值.randomCount}</label>
+                                    <input type="number" id="randomIPCount" value="20" min="1" max="100" class="field-input field-input-sm">
+                                </div>
+                                <div class="field field-inline field-w80">
+                                    <label class="field-label field-label-sm">${是否值236 ? 'رشته‌ها' : '线程'}</label>
+                                    <input type="number" id="testThreads" value="5" min="1" max="50" class="field-input field-input-sm">
+                                </div>
+                            </div>
+                            <!-- manualInputDiv: JS toggles this panel via style.display -->
+                            <div id="manualInputDiv" class="field field-tight">
+                                <label class="field-label field-label-sm">${翻译值.latencyTestIP}</label>
+                                <input type="text" id="latencyTestInput" placeholder="${翻译值.latencyTestIPPlaceholder}" class="field-input field-input-sm">
+                            </div>
+                            <!-- urlFetchDiv: JS toggles this panel via style.display -->
+                            <div id="urlFetchDiv" class="field field-tight is-hidden">
+                                <label class="field-label field-label-sm">${翻译值.fetchURL}</label>
+                                <div class="field-row-tight">
+                                    <input type="text" id="fetchURLInput" placeholder="${翻译值.fetchURLPlaceholder}" class="field-input field-input-sm field-input-grow">
+                                    <button type="button" id="fetchIPBtn" class="btn btn-primary btn-nowrap"><svg class="icon" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path fill="currentColor" d creator="M8 1v8.6l3.3-3.3 1.4 1.4L8 12.4 2.3 7.7l1.4-1.4L7 9.6V1h1z"/><path fill="currentColor" d="M2 13h12v2H2z"/></svg>${翻译值.fetchIP}</button>
+                                </div>
+                            </div>
+                            <!-- cfRandomDiv: JS toggles this panel via style.display -->
+                            <div id="cfRandomDiv" class="field field-tight is-hidden">
+                                <button type="button" id="generateCFIPBtn" class="btn btn-primary btn-block"><svg class="icon" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M2 2h3v3H2V2zm9 0h3v3h-3V2zM2 11h3v3H2v-3zm9.5 0H13v1.5h-1.5V14H10v-1.5H8.5V11H10V9.5h1.5V11z"/></svg>${翻译值.generateIP}</button>
+                            </div>
+                            <div class="btn-row">
+                                <button type="button" id="startLatencyTest" class="btn btn-primary"><svg class="icon" viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path fill="currentColor" d="M4 2l10 6-10 6V2z"/></svg>${翻译值.startTest}</button>
+                                <!-- stopLatencyTest: JS toggles this button via style.display -->
+                                <button type="button" id="stopLatencyTest" class="btn btn-danger is-hidden"><svg class="icon" viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><rect x="3" y="3" width="10" height="10" fill="currentColor"/></svg>${翻译值.stopTest}</button>
+                            </div>
+                            <!-- latencyTestStatus: JS toggles this panel via style.display -->
+                            <div id="latencyTestStatus" class="field-hint latency-status is-hidden"></div>
+                            <!-- latencyTestResults: JS toggles this panel via style.display -->
+                            <div id="latencyTestResults" class="latency-results is-hidden">
+                                <div class="results-header">
+                                    <span class="results-title">${翻译值.testResult}</span>
+                                    <div class="btn-row-tight">
+                                        <button type="button" id="selectAllResults" class="btn btn-ghost btn-sm">${翻译值.selectAll}</button>
+                                        <button type="button" id="deselectAllResults" class="btn btn-ghost btn-sm">${翻译值.deselectAll}</button>
+                                    </div>
+                                </div>
+                                <!-- cityFilterContainer: JS toggles this panel via style.display -->
+                                <div id="cityFilterContainer" class="panel panel-filter is-hidden">
+                                    <div class="filter-mode-row">
+                                        <label class="checkbox-row checkbox-row-inline">
+                                            <input type="radio" name="cityFilterMode" value="all" checked class="checkbox-input checkbox-input-sm">
+                                            <span>${是否值236 ? '全部城市' : '全部城市'}</span>
+                                        </label>
+                                        <label class="checkbox-row checkbox-row-inline checkbox-row-spaced">
+                                            <input type="radio" name="cityFilterMode" value="fastest10" class="checkbox-input checkbox-input-sm">
+                                            <span>${是否值236 ? '只选择最快的10个' : '只选择最快的10个'}</span>
+                                        </label>
+                                    </div>
+                                    <div id="cityCheckboxesContainer" class="check-group check-group-scroll"></div>
+                                </div>
+                                <div id="latencyResultsList" class="results-list"></div>
+                                <div class="btn-row btn-row-top">
+                                    <button type="button" id="overwriteSelectedToYx" class="btn btn-primary btn-flex">${是否值236 ? '覆盖添加' : '覆盖添加'}</button>
+                                    <button type="button" id="appendSelectedToYx" class="btn btn-ghost btn-flex">${是否值236 ? '追加添加' : '追加添加'}</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                                <label class="field-label">${翻译值.socks5Config}</label>
+                                <input type="text" id="socksConfig" placeholder="${是否值236 ? 解码64('2YXYq9in2YQ6IHVzZXI6cGFzc0Bob3N0OnBvcnQg24zYpyBodHRwOi8vdXNlcjpwYXNzQGhvc3Q6cG9ydA==') : 解码64('5L6L5aaCOiB1c2VyOnBhc3NAaG9zdDpwb3J0IOaIliBodHRwOi8vdXNlcjpwYXNzQGhvc3Q6cG9ydA==')}" class="field-input">
+                                <small class="field-hint">${是否值236 ? 解码64('2KLYr9ix2LMg2b7YsdmI2qnYs9uMINiu2LHZiNis24wg2KjYsdin24wg2KfZhtiq2YLYp9mEINiq2YXYp9mFINiq2LHYp9mB24zaqSDYrtix2YjYrNuMLiDYqNiv2YjZhiDZvtuM2LTZiNmG2K8g2KjZhyDYtdmI2LHYqiBzNSDYr9ixINmG2LjYsSDar9ix2YHYqtmHINmF24zigIzYtNmI2K8=') : 解码64('5Ye656uZ5Luj55CG5Zyw5Z2A77yM55So5LqO6L2s5Y+R5omA5pyJ5Ye656uZ5rWB6YeP44CC5LiN5YaZ5YmN57yA6buY6K6k5oyJIHM1IOWkhOeQhg==')}</small>
+                        </div>
+                    </form>
+
+                    <h3 class="section-heading">${翻译值.advancedControl}</h3>
+                    <form id="advancedConfigForm" class="form-block">
+                        <div class="field">
+                                <label class="field-label">${翻译值.subscriptionConverter}</label>
+                                <input type="text" id="scu" placeholder="${翻译值.subscriptionConverterPlaceholder}" class="field-input">
+                                <small class="field-hint">${翻译值.subscriptionConverterHint}</small>
+                        </div>
+                        <div class="field">
+                                <label class="field-label">${翻译值.builtinPreferred}</label>
+                            <div class="panel">
+                                <div class="checkbox-row-wrap">
+                                    <label class="checkbox-row">
+                                        <input type="checkbox" id="ena" class="checkbox-input">
+                                            <span class="checkbox-text">${翻译值.enableNativeAddress}</span>
+                                    </label>
+                                </div>
+                                <div class="checkbox-row-wrap">
+                                    <label class="checkbox-row">
+                                        <input type="checkbox" id="epd" checked class="checkbox-input">
+                                            <span class="checkbox-text">${翻译值.enablePreferredDomain}</span>
+                                    </label>
+                                </div>
+                                <div class="checkbox-row-wrap">
+                                    <label class="checkbox-row">
+                                        <input type="checkbox" id="epi" checked class="checkbox-input">
+                                            <span class="checkbox-text">${翻译值.enablePreferredIP}</span>
+                                    </label>
+                                </div>
+                                <div class="checkbox-row-wrap">
+                                    <label class="checkbox-row">
+                                        <input type="checkbox" id="egi" checked class="checkbox-input">
+                                            <span class="checkbox-text">${翻译值.enableGitHubPreferred}</span>
+                                    </label>
+                                </div>
+                                    <small class="field-hint field-hint-block">${翻译值.builtinPreferredHint}</small>
+                            </div>
+                        </div>
+                        <div class="field">
+                                <label class="field-label">${翻译值.jkSection}</label>
+                            <div class="panel">
+                                <label class="checkbox-row">
+                                    <input type="checkbox" id="jk" class="checkbox-input">
+                                        <span class="checkbox-text">${翻译值.jkEnable}</span>
+                                </label>
+                                    <small class="field-hint field-hint-block">${翻译值.jkHint}</small>
+                            </div>
+                        </div>
+                        <div class="field">
+                                <label class="field-label">优选IP筛选设置</label>
+                            <div class="panel">
+                                <div class="field field-tight">
+                                    <label class="field-label">IP版本选择</label>
+                                    <div class="check-group">
+                                        <label class="checkbox-row">
+                                            <input type="checkbox" id="ipv4Enabled" checked class="checkbox-input">
+                                            <span class="checkbox-text-sm">IPv4</span>
+                                        </label>
+                                        <label class="checkbox-row">
+                                            <input type="checkbox" id="ipv6Enabled" checked class="checkbox-input">
+                                            <span class="checkbox-text-sm">IPv6</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="field field-tight">
+                                    <label class="field-label">运营商选择</label>
+                                    <div class="check-group">
+                                        <label class="checkbox-row">
+                                            <input type="checkbox" id="ispMobile" checked class="checkbox-input">
+                                            <span class="checkbox-text-sm">移动</span>
+                                        </label>
+                                        <label class="checkbox-row">
+                                            <input type="checkbox" id="ispUnicom" checked class="checkbox-input">
+                                            <span class="checkbox-text-sm">联通</span>
+                                        </label>
+                                        <label class="checkbox-row">
+                                            <input type="checkbox" id="ispTelecom" checked class="checkbox-input">
+                                            <span class="checkbox-text-sm">电信</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                    <small class="field-hint field-hint-block">选择要使用的IP版本和运营商，未选中的将被过滤</small>
+                            </div>
+                        </div>
+                        <div class="field">
+                                <label class="field-label">${翻译值.allowAPIManagement}</label>
+                            <select id="apiEnabled" class="field-input">
+                                    <option value="">${翻译值.apiEnabledDefault}</option>
+                                    <option value="yes">${翻译值.apiEnabledYes}</option>
+                            </select>
+                                <small class="field-hint field-hint-warn">${翻译值.apiEnabledHint}</small>
+                        </div>
+                        <div class="field">
+                                <label class="field-label">${翻译值.regionMatching}</label>
+                            <select id="regionMatching" class="field-input">
+                                    <option value="">${翻译值.regionMatchingDefault}</option>
+                                    <option value="no">${翻译值.regionMatchingNo}</option>
+                            </select>
+                                <small class="field-hint">${翻译值.regionMatchingHint}</small>
+                        </div>
+                        <div class="field">
+                                <label class="field-label">${翻译值.downgradeControl}</label>
+                            <select id="downgradeControl" class="field-input">
+                                    <option value="">${翻译值.downgradeControlDefault}</option>
+                                    <option value="no">${翻译值.downgradeControlNo}</option>
+                                    <option value="only">${翻译值.downgradeControlOnly}</option>
+                            </select>
+                                <small class="field-hint">${翻译值.downgradeControlHint}</small>
+                        </div>
+                        <div class="field">
+                                <label class="field-label">${翻译值.tlsControl}</label>
+                            <select id="portControl" class="field-input">
+                                    <option value="">${翻译值.tlsControlDefault}</option>
+                                    <option value="yes">${翻译值.tlsControlYes}</option>
+                            </select>
+                                <small class="field-hint">${翻译值.tlsControlHint}</small>
+                        </div>
+                        <div class="field">
+                                <label class="field-label">${翻译值.preferredControl}</label>
+                            <select id="preferredControl" class="field-input">
+                                    <option value="">${翻译值.preferredControlDefault}</option>
+                                    <option value="yes">${翻译值.preferredControlYes}</option>
+                            </select>
+                                <small class="field-hint">${翻译值.preferredControlHint}</small>
+                        </div>
+                    </form>
+                    <div id="currentConfig" class="code-block">
+                            ${翻译值.loading}
+                    </div>
+                    <div id="pathTypeInfo" class="code-block code-block-info">
+                            <div class="code-block-title">${翻译值.currentConfig}</div>
+                            <div id="pathTypeStatus">${翻译值.checking}</div>
+                    </div>
+                </div>
+                <!-- statusMessage: JS toggles this panel via style.display -->
+                <div id="statusMessage" class="status-message is-hidden"></div>
+            </div>
+            
+            <div class="card">
+                    <h2 class="card-title">${翻译值.relatedLinks}</h2>
+                <div class="link-row">
+                        <a href="https://github.com/byJoey/cfnew" target="_blank" class="link-item">${翻译值.githubProject}</a>
+                        <a href="https://github.com/byJoey/yx-tools/releases/" target="_blank" rel="noopener noreferrer" class="link-item">${翻译值.优选工具}</a>
+                    <a href="https://www.youtube.com/@joeyblog" target="_blank" class="link-item">YouTube @joeyblog</a>
+                </div>
+            </div>
+        </div>
+        <div id="cpToastStack" class="cp-toast-stack" aria-live="polite" aria-atomic="false"></div>
+        <div id="cpActionStatus" class="cp-action-status" role="status" aria-live="polite"></div>
+        <div id="cpActionBar" class="cp-action-bar" role="toolbar" aria-label="${翻译值.configManagement}">
+            <button type="button" id="cpBtnSaveAll" class="cp-fab-save" title="${是否值236 ? 'ذخیره همه تنظیمات' : '保存所有配置 (Ctrl+S)'}">
+                <span class="cp-fab-icon">▣</span>
+                <span>${是否值236 ? 'ذخیره همه' : '保 存 全 部'}</span>
+                <span class="cp-fab-dot" aria-hidden="true"></span>
+            </button>
+            <button type="button" id="cpBtnRefresh" class="cp-action-btn" data-tip="${翻译值.refreshConfig}" aria-label="${翻译值.refreshConfig}">
+                <span aria-hidden="true">↻</span>
+                <span class="cp-btn-label">${翻译值.refreshConfig}</span>
+            </button>
+            <button type="button" id="cpBtnReset" class="cp-action-btn cp-action-btn-danger" data-tip="${翻译值.resetConfig}" aria-label="${翻译值.resetConfig}">
+                <span aria-hidden="true">⌫</span>
+                <span class="cp-btn-label">${翻译值.resetConfig}</span>
+            </button>
+        </div>

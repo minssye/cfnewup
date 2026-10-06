@@ -1,0 +1,32 @@
+/* 22. Extended responsive for the field / button system
+   ========================================================================== */
+@media (max-width: 720px) {
+  .field-w120,
+  .field-w100,
+  .field-w80 {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+
+  .field-row {
+    gap: 10px;
+  }
+
+  .btn-flex,
+  .btn-row > .btn {
+    flex: 1 1 100%;
+  }
+
+  .link-row {
+    flex-direction: column;
+  }
+
+  .link-item {
+    justify-content: center;
+  }
+
+  .results-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

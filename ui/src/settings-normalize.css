@@ -1,0 +1,46 @@
+
+/* --------------------------------------------------------------------------
+   13c. Normalise styles that the page JS writes directly onto elements it
+   creates (cssText / style.backgroundColor). These cannot be reached by the
+   markup classes, so they are pinned to design tokens here. No page logic is
+   touched.
+   -------------------------------------------------------------------------- */
+#wkRegionHint {
+  background: transparent !important;
+}
+
+#latencyResultsList > div {
+  border-bottom: 0 !important;
+}
+
+#cityCheckboxesContainer label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 9px !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+  background: var(--surface) !important;
+  color: var(--text-mut) !important;
+  font-size: 0.75rem !important;
+  line-height: 1.4;
+  cursor: pointer;
+  transition: border-color 150ms ease, background-color 150ms ease,
+    color 150ms ease;
+}
+
+#cityCheckboxesContainer label:hover {
+  border-color: var(--accent) !important;
+  background: var(--accent-soft) !important;
+  color: var(--text) !important;
+}
+
+#cityCheckboxesContainer label input[type="checkbox"] {
+  flex: 0 0 15px;
+  width: 15px;
+  height: 15px;
+  margin: 0 !important;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+

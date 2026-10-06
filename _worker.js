@@ -1059,7 +1059,9 @@ export default {
           const 终端页面 = `<!DOCTYPE html>
     <html lang="${语言值661}" dir="${是否值664 ? 'rtl' : 'ltr'}">
     <head>
+<!--cp:theme-boot-->
 <script>(function(){try{var t=localStorage.getItem('cp-theme');if(t==='light'||t==='dark'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();</script>
+<!--/cp:theme-boot-->
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>${翻译值659.title}</title>
@@ -1880,6 +1882,7 @@ body.fx-off::after {
                 <span class="cp-fx-dot" aria-hidden="true"></span>
                 <span id="cpFxLabel">FX: ON</span>
             </button>
+<!--cp:theme-button-->
 <button type="button" id="cpThemeToggle" class="cp-theme-toggle" data-current="dark" title="切换主题皮肤" aria-label="切换主题皮肤">
                     <svg class="cp-theme-icon cp-theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                         <path d="M20.2 14.6A8.3 8.3 0 0 1 9.4 3.8a8.5 8.5 0 1 0 10.8 10.8Z"/>
@@ -1890,6 +1893,7 @@ body.fx-off::after {
                     </svg>
                     <span id="cpThemeLabel">深色</span>
                 </button>
+<!--/cp:theme-button-->
         <div class="terminal">
             <div class="terminal-header">
                 <div class="terminal-buttons">
@@ -2120,6 +2124,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 });
 </script>
+<!--cp:theme-script-->
 <script>
 /* Theme skin switcher — purely additive. Persists to localStorage['cp-theme']
    and reflects the choice on <html data-theme="dark|light">. The page's own
@@ -2179,6 +2184,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 })();
 </script>
+<!--/cp:theme-script-->
     </body>
     </html>`;
           return new Response(终端页面, {
@@ -5157,7 +5163,9 @@ async function 处理订阅值(请求241, 用户240 = null) {
   const 值页面 = `<!DOCTYPE html>
     <html lang="${语言值}" dir="${是否值236 ? 'rtl' : 'ltr'}">
     <head>
+<!--cp:theme-boot-->
 <script>(function(){try{var t=localStorage.getItem('cp-theme');if(t==='light'||t==='dark'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();</script>
+<!--/cp:theme-boot-->
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>${翻译值.title}</title>
@@ -7166,6 +7174,7 @@ button:disabled:hover {
                 <span class="cp-fx-dot" aria-hidden="true"></span>
                 <span id="cpFxLabel">FX: ON</span>
             </button>
+<!--cp:theme-button-->
 <button type="button" id="cpThemeToggle" class="cp-theme-toggle" data-current="dark" title="切换主题皮肤" aria-label="切换主题皮肤">
                     <svg class="cp-theme-icon cp-theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                         <path d="M20.2 14.6A8.3 8.3 0 0 1 9.4 3.8a8.5 8.5 0 1 0 10.8 10.8Z"/>
@@ -7176,6 +7185,7 @@ button:disabled:hover {
                     </svg>
                     <span id="cpThemeLabel">深色</span>
                 </button>
+<!--/cp:theme-button-->
         <div class="container">
             <div class="header">
                     <h1 class="title cp-glitch" data-text="${翻译值.title}">${翻译值.title}</h1>
@@ -9685,6 +9695,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 });
 </script>
+<!--cp:theme-script-->
 <script>
 /* Theme skin switcher — purely additive. Persists to localStorage['cp-theme']
    and reflects the choice on <html data-theme="dark|light">. The page's own
@@ -9744,6 +9755,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 })();
 </script>
+<!--/cp:theme-script-->
     </body>
     </html>`;
   return new Response(值页面, {
