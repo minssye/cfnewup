@@ -49,6 +49,7 @@ const themeSharedCss = trim(readSrc('theme-shared.css'));
 const themeButton = trim(readSrc('theme-button.html'));
 const themeBoot = trim(readSrc('theme-boot.html'));
 const themeJs = trim(readSrc('theme.js'));
+const topbarCss = trim(readSrc('topbar.css'));
 
 const BACKTICK = String.fromCharCode(96);
 
@@ -61,7 +62,7 @@ const escapingChecks = [
   ['tokens.css', tokens], ['terminal.css', terminalCss],
   ['settings css', settingsCss], ['theme-shared.css', themeSharedCss],
   ['theme-button.html', themeButton], ['theme-boot.html', themeBoot],
-  ['theme.js', themeJs]
+  ['theme.js', themeJs], ['topbar.css', topbarCss]
 ];
 for (const [name, text] of escapingChecks) {
   if (text.includes(BACKTICK)) throw new Error(name + ' contains a backtick; it would terminate the Worker template literal');
@@ -82,6 +83,8 @@ if (hadPrevious) {
     const re = new RegExp('\\n?[ \\t]*<!--cp:' + m + '-->[\\s\\S]*?<!--/cp:' + m + '-->', 'g');
     text = text.replace(re, '');
   }
+  text = text.replace(/<!--cp:topbar-open-->[ \t]*<nav class="cp-topbar">[ \t]*\n?/g, '');
+  text = text.replace(/[ \t]*\n?[ \t]*<\/nav><!--cp:topbar-close-->/g, '');
 }
 
 const lines = text.split('\n');
@@ -114,8 +117,11 @@ console.log('settings page  L' + (setStart + 1) + '   <style> L' + (setStyleOpen
 
 // ---------------------------------------------------------------- splice --
 const nl = (s) => s.split('\n');
+// Order matters: page css first so the shared theme + topbar rules can override
+// the page defaults without needing !important.
 const styleBlock = (pageCss) =>
-  ['<style>'].concat(nl(tokens)).concat(['']).concat(nl(themeSharedCss)).concat(['']).concat(nl(pageCss)).concat(['</style>']);
+  ['<style>'].concat(nl(tokens)).concat(['']).concat(nl(pageCss)).concat([''])
+    .concat(nl(themeSharedCss)).concat(['']).concat(nl(topbarCss)).concat(['</style>']);
 
 const out = [];
 out.push(...lines.slice(0, termStyleOpen));
@@ -164,10 +170,29 @@ result = result.replace(/^([ \t]*<\/body>[ \t]*)$/gm, (m) => {
   return wrap('theme-script', themeJs) + '\n' + m;
 });
 
-if (bootCount !== 2 || buttonCount !== 2 || scriptCount !== 2) {
+let topbarCount = 0;
+{
+  const hud = '<div class="cp-hud">';
+  let from = 0;
+  for (;;) {
+    const at = result.indexOf(hud, from);
+    if (at < 0) break;
+    const open = '<!--cp:topbar-open--><nav class="cp-topbar">' + '\n'; 
+    result = result.slice(0, at) + open + result.slice(at);
+    const close = result.indexOf('<!--/cp:theme-button-->', at + open.length);
+    if (close < 0) throw new Error('no theme-button close marker after cp-hud');
+    const end = close + '<!--/cp:theme-button-->'.length;
+    result = result.slice(0, end) + '\n</nav><!--cp:topbar-close-->' + result.slice(end);
+    topbarCount++;
+    from = end + 30;
+  }
+}
+
+if (bootCount !== 2 || buttonCount !== 2 || scriptCount !== 2 || topbarCount !== 2) {
   throw new Error('expected to inject into exactly 2 pages, got boot=' + bootCount + ' button=' + buttonCount + ' script=' + scriptCount);
 }
 console.log('injected: boot x' + bootCount + ', button x' + buttonCount + ', script x' + scriptCount);
+console.log('wrapped top bar x' + topbarCount);
 
 // ---------------------------------------------------------------- write ---
 const finalText = eol === '\r\n' ? result.replace(/\n/g, '\r\n') : result;

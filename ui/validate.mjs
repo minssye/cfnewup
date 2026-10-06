@@ -158,6 +158,40 @@ for (const [what, needle, expected] of [
   if (n !== expected) fail('expected ' + expected + ' x ' + what + ', found ' + n);
 }
 
+// 7. the top navigation bar must wrap the four top-area controls, exactly once
+//    per page, with every control physically inside it.
+{
+  const openTag = '<nav class="cp-topbar">';
+  const open = count(openTag);
+  const close = count('</nav>');
+  if (open !== 2) fail('expected 2 x <nav class="cp-topbar">, found ' + open);
+  if (close !== 2) fail('expected 2 x </nav>, found ' + close);
+
+  const mustBeInside = ['class="cp-hud"', 'class="cp-lang-wrapper"', 'id="cpFxToggle"', 'id="cpThemeToggle"'];
+  const segments = [];
+  let from = 0;
+  for (;;) {
+    const a = builtText.indexOf('<!--cp:topbar-open-->' + openTag, from);
+    if (a < 0) break;
+    const b = builtText.indexOf('</nav><!--cp:topbar-close-->', a);
+    if (b < 0) { fail('a top bar opens but never closes'); break; }
+    segments.push(builtText.slice(a, b));
+    from = b + 1;
+  }
+  if (segments.length !== 2) fail('expected 2 closed top-bar segments, found ' + segments.length);
+  segments.forEach((seg, i) => {
+    mustBeInside.forEach((needle) => {
+      if (!seg.includes(needle)) fail('top bar #' + (i + 1) + ' does not contain ' + needle);
+    });
+  });
+}
+
+// 8. the top bar must be styled by the shared stylesheet on both pages
+for (const key of ['terminal', 'settings']) {
+  if (!B[key].css.includes('.cp-topbar {')) fail(key + ' page stylesheet is missing the .cp-topbar rules');
+  if (!B[key].css.includes('position: fixed')) fail(key + ' page stylesheet does not pin the top bar');
+}
+
 // 7. decorative leftovers should be gone from the rebuilt markup
 const legacy = (B.settings.body.match(/\sstyle\s*=/g) || []).length;
 if (legacy > 5) caution('rebuilt settings markup still carries ' + legacy + ' inline style attribute(s) - expected no more than 5.');

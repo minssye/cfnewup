@@ -29,7 +29,8 @@ ui/
    ├─ theme-shared.css    主题切换按钮样式
    ├─ theme-button.html   主题切换按钮标记
    ├─ theme-boot.html     防闪烁内联脚本（放在 <head>）
-   └─ theme.js            主题切换逻辑
+   ├─ theme.js            主题切换逻辑
+   └─ topbar.css          固定顶部导航栏样式（最后加载，可覆盖页面默认值）
 ```
 
 ## 本地构建
@@ -47,6 +48,32 @@ node ui/validate.mjs --upstream upstream_worker.js --built _worker.js
 
 脚本没有任何第三方依赖，只用 Node 内置模块。Node 18+ 均可。
 
+## 固定顶部导航栏
+
+两个页面顶部都有一条固定的状态 / 导航栏：
+
+```
+[ SYS:: … NODE:: … LINK:: … ]        [LANG_][语言][FX][主题]
+ 左侧：状态读数（窄屏自动隐藏）        右侧：控制项，一行居右对齐
+```
+
+它是**构建时自动加上去的**：`build.mjs` 在 `<div class="cp-hud">` 前插入
+`<nav class="cp-topbar">`，在主题按钮之后插入 `</nav>`。两个标记分别是
+`<!--cp:topbar-open-->` / `<!--cp:topbar-close-->`，重建时先剥离再插入，保持幂等。
+
+**原有标记没有被改动**：id、class、事件处理器一个没动，只是多了一层容器。
+
+栏内四个控制项（`LANG_` 标签、语言下拉、FX 开关、主题开关）被强制统一为
+**同一高度、同一垂直中线**，并靠右排成一行——这正是之前不对齐、大小不一的地方。
+
+`topbar.css` 在样式表里排在最后，所以它能覆盖页面默认样式而不需要 `!important`。
+
+实测（两页 × 1440 / 1024 / 768 / 375）：
+
+- 控制项高度差 **0px**，垂直中线差 **0px**
+- 右对齐间距 20px（移动端 12px）
+- 无横向溢出、无内容遮挡、滚动时保持固定
+
 ## 构建做了什么
 
 1. **剥离上一次的注入**：所有注入块都用 `<!--cp:name-->` / `<!--/cp:name-->` 包起来，
@@ -55,14 +82,15 @@ node ui/validate.mjs --upstream upstream_worker.js --built _worker.js
    上游改了行数也不受影响。
 3. **替换设置页标记**：`<body>` 到 `<script>` 之间换成 `src/body.html`。
 4. **注入主题切换**：防闪烁脚本进 `<head>`，按钮插在 `#cpFxToggle` 之后，逻辑脚本放 `</body>` 前。
-5. **绝不改动页面 JS**：两段页面脚本逐字节保留。
+5. **包裹顶部导航栏**：见上一节。
+6. **绝不改动页面 JS**：两段页面脚本逐字节保留。
 
 ### 两条硬性约束
 
 注入的内容会被拼进 Worker 的 JS 模板字符串，所以构建前会检查：
 
-- 不含反引号 `` ` `` —— 否则会提前结束模板字符串，整个 Worker 报废。
-- 不含 `${...}` —— 否则会被**服务端求值**（只有 `body.html` 例外，那里的 `${...}` 是页面自己的模板占位符）。
+- 不含反引号 ` \` ` —— 否则会提前结束模板字符串，整个 Worker 报废。
+- 不含 `${` —— 否则会被**服务端求值**（只有 `body.html` 例外，那里的 `${...}` 是页面自己的模板占位符）。
 
 违反任一条，构建直接报错退出。
 
@@ -79,6 +107,8 @@ node ui/validate.mjs --upstream upstream_worker.js --built _worker.js
 | 上游的内联事件没被丢掉 | 致命 | |
 | 标记里用到的 class 都有样式 | 致命 | |
 | 主题注入恰好各 2 处 | 致命 | 防止重复注入 |
+| **顶部栏包裹四个控制项** | 致命 | 每页恰好一个 `<nav class="cp-topbar">`，且四个控制项确实在栏内 |
+| 顶部栏样式存在 | 致命 | 两页样式表都必须有 `.cp-topbar` 且 `position: fixed` |
 
 ### 上游新增字段时会发生什么
 
@@ -99,7 +129,7 @@ FAILED (1) - refusing to publish this build
 ### 修复步骤
 
 1. 看 Action 的 Summary，里面有完整报告和缺失的 id 列表
-2. 跑一次 `node ui/build.mjs --input <上游原始文件> --output /tmp/x.js`
+2. 跑一次 `node ui/build.mjs --input <上游原始文件> --output /tmp/x.js`，
    并把上游那段新字段的标记照抄进 `ui/src/body.html`（用已有的语义类，别写内联样式）
 3. 本地跑 `node ui/validate.mjs --upstream <上游原始文件> --built <构建产物>` 直到通过
 4. 提交，然后到 Actions 页面手动重跑工作流
@@ -113,6 +143,19 @@ FAILED (1) - refusing to publish this build
 上游代码里有 `const 云墙状态 = document.getElementById('cfStatus')`，但 `云墙状态`
 之后再也没被用过，标记里也没有 `#cfStatus`。这是上游的**死代码**，无任何功能影响。
 校验会把它识别为「死引用」只给警告。
+
+## 两个工作流
+
+| 工作流 | 触发 | 作用 |
+|---|---|---|
+| `sync-from-cfnew.yml` | 每 6 小时 / 手动 | 拉上游 → 构建 → 校验 → 通过才提交 |
+| `ui-check.yml` | 推送或 PR 触及 `ui/**` 或 `_worker.js` | 立刻校验，不必等 6 小时 |
+
+`ui-check.yml` 做两件事：
+
+1. **产物漂移检查**：用提交的 `_worker.js` 重新构建一遍，产物必须逐字节一致。
+   不一致说明有人手工改了生成物，或者改了 `ui/src/` 却忘了重新构建。
+2. **契约校验**：和同步流程用的是同一个 `validate.mjs`。
 
 ## 设计与无障碍基线
 

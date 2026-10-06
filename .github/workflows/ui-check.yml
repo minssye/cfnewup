@@ -1,0 +1,79 @@
+name: UI 构建校验
+
+# 上游同步是每 6 小时一次，中间改了 ui/ 源文件没有任何反馈。
+# 这个工作流在每次推送触及 ui/ 或 _worker.js 时立刻校验，
+# 把问题挡在自动同步之前，而不是等 6 小时后才发现。
+
+on:
+  push:
+    paths:
+      - 'ui/**'
+      - '_worker.js'
+      - '.github/workflows/ui-check.yml'
+  pull_request:
+    paths:
+      - 'ui/**'
+      - '_worker.js'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ui-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 检出仓库
+        uses: actions/checkout@v4
+
+      - name: 准备 Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # 构建是幂等的：拿已提交的 _worker.js 再跑一遍，产物必须和提交的一模一样。
+      # 不一致就说明有人手工改过 _worker.js，或者 ui/src 与产物已经对不上。
+      - name: 校验产物与源文件一致（幂等 / 无漂移）
+        run: |
+          set +e
+          node ui/build.mjs --input _worker.js --output /tmp/rebuilt_worker.js 2>&1 | tee /tmp/build.log
+          STATUS=${PIPESTATUS[0]}
+          if [ $STATUS -ne 0 ]; then
+            {
+              echo "## UI 构建失败"
+              echo '```'
+              cat /tmp/build.log
+              echo '```'
+            } >> $GITHUB_STEP_SUMMARY
+            exit $STATUS
+          fi
+
+          if ! diff -q _worker.js /tmp/rebuilt_worker.js > /dev/null; then
+            echo "::error::提交的 _worker.js 与 ui/ 源文件重新构建的结果不一致。"
+            echo ""
+            echo "这通常意味着："
+            echo "  - 有人手工编辑了 _worker.js（它是生成物，应改 ui/src/ 后重新构建），或"
+            echo "  - ui/src/ 改了但忘了跑 node ui/build.mjs"
+            echo ""
+            diff -u _worker.js /tmp/rebuilt_worker.js | head -40
+            {
+              echo "## 产物漂移"
+              echo '提交的 `_worker.js` 与重新构建的结果不一致，请本地运行 `node ui/build.mjs` 后一起提交。'
+            } >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi
+          echo "产物与源文件一致"
+
+      - name: 校验 UI 契约
+        run: |
+          set +e
+          node ui/validate.mjs --built _worker.js 2>&1 | tee /tmp/validate.log
+          STATUS=${PIPESTATUS[0]}
+          {
+            echo "## UI 契约校验"
+            echo '```'
+            cat /tmp/validate.log
+            echo '```'
+          } >> $GITHUB_STEP_SUMMARY
+          exit $STATUS

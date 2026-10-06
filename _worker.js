@@ -1124,72 +1124,6 @@ export default {
   --grid-line:  rgba(30,60,110,.05);
 }
 
-/* --------------------------------------------------------------------------
-   Theme skin switcher (button injected by the build; see parts/theme_*.js)
-   -------------------------------------------------------------------------- */
-.cp-theme-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 34px;
-  padding: 6px 12px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--surface-2);
-  color: var(--text-mut);
-  font-family: inherit;
-  font-size: 0.8125rem;
-  font-weight: 550;
-  line-height: 1.2;
-  cursor: pointer;
-  transition: background-color 180ms ease, border-color 180ms ease,
-    color 180ms ease;
-}
-
-.cp-theme-toggle:hover {
-  border-color: var(--accent);
-  background: var(--surface-3);
-  color: var(--text);
-}
-
-.cp-theme-toggle:active {
-  background: var(--surface-3);
-}
-
-.cp-theme-toggle:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-.cp-theme-icon {
-  flex: 0 0 auto;
-  width: 15px;
-  height: 15px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.7;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-/* dark shows the moon, light shows the sun */
-.cp-theme-toggle[data-current="dark"] .cp-theme-icon-sun,
-.cp-theme-toggle:not([data-current]) .cp-theme-icon-sun {
-  display: none;
-}
-
-.cp-theme-toggle[data-current="light"] .cp-theme-icon-moon {
-  display: none;
-}
-
-.cp-theme-toggle[data-current="light"] {
-  color: var(--text);
-}
-
-#cpThemeLabel {
-  white-space: nowrap;
-}
-
 /* ==========================================================================
    terminal.css - Terminal / login landing page
    Tokens come from _tokens.css (dark-first, dual theme via data-theme).
@@ -1861,12 +1795,296 @@ body.fx-off::after {
     top: 106px;
   }
 }
+
+/* --------------------------------------------------------------------------
+   Theme skin switcher (button injected by the build; see parts/theme_*.js)
+   -------------------------------------------------------------------------- */
+.cp-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-2);
+  color: var(--text-mut);
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: 550;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: background-color 180ms ease, border-color 180ms ease,
+    color 180ms ease;
+}
+
+.cp-theme-toggle:hover {
+  border-color: var(--accent);
+  background: var(--surface-3);
+  color: var(--text);
+}
+
+.cp-theme-toggle:active {
+  background: var(--surface-3);
+}
+
+.cp-theme-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.cp-theme-icon {
+  flex: 0 0 auto;
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* dark shows the moon, light shows the sun */
+.cp-theme-toggle[data-current="dark"] .cp-theme-icon-sun,
+.cp-theme-toggle:not([data-current]) .cp-theme-icon-sun {
+  display: none;
+}
+
+.cp-theme-toggle[data-current="light"] .cp-theme-icon-moon {
+  display: none;
+}
+
+.cp-theme-toggle[data-current="light"] {
+  color: var(--text);
+}
+
+#cpThemeLabel {
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   Fixed top navigation / status bar
+   Wraps the status readout, language selector, FX toggle and theme toggle into
+   one fixed bar so they share a single baseline, a single control height and a
+   right-aligned row. Pure presentation: no element, id or handler is changed.
+   -------------------------------------------------------------------------- */
+.cp-topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 10px;
+  min-height: 56px;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: blur(16px) saturate(140%);
+}
+
+/* ---- status readout: compact single row, pinned left ---- */
+.cp-topbar .cp-hud {
+  position: static;
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 16px;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  text-align: left;
+  overflow: hidden;
+}
+
+.cp-topbar .cp-hud-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 34px;
+  white-space: nowrap;
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+.cp-topbar .cp-hud-label {
+  color: var(--text-dim);
+  font-weight: 600;
+}
+
+/* ---- controls: one right-aligned row, one shared height ---- */
+.cp-topbar .cp-lang-wrapper {
+  position: static;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  margin: 0 0 0 auto;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+
+/* every control in the bar is exactly the same height and shares one baseline */
+.cp-topbar .cp-lang-tag,
+.cp-topbar #languageSelector,
+.cp-topbar #cpFxToggle,
+.cp-topbar #cpThemeToggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: 34px;
+  min-height: 34px;
+  max-height: 34px;
+  margin: 0;
+  padding: 0 12px;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 550;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+.cp-topbar .cp-lang-tag {
+  padding: 0 10px;
+  border: 1px solid var(--border);
+  background: var(--surface-3);
+  color: var(--text-mut);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.cp-topbar #languageSelector {
+  padding: 0 30px 0 12px;
+  border: 1px solid var(--border-str);
+  background: var(--surface-2);
+  color: var(--text);
+  font-size: 12.5px;
+  cursor: pointer;
+}
+
+.cp-topbar #cpFxToggle,
+.cp-topbar #cpThemeToggle {
+  position: static;
+  flex: 0 0 auto;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text-mut);
+  font-size: 12.5px;
+  cursor: pointer;
+  box-shadow: none;
+  transition: background-color 180ms ease, border-color 180ms ease,
+    color 180ms ease;
+}
+
+.cp-topbar #cpFxToggle:hover,
+.cp-topbar #cpThemeToggle:hover {
+  border-color: var(--accent);
+  background: var(--surface-3);
+  color: var(--text);
+}
+
+/* the settings page renders the language select as a full-width control by
+   default; inside the bar it must hug its content instead */
+.cp-topbar #languageSelector {
+  width: auto;
+  max-width: 190px;
+}
+
+/* ---- keep page content clear of the fixed bar ----
+   The settings page is the only page with a .container, so this scopes the
+   offset to it. The terminal page already carries 64px of body padding and
+   centres its card, so it needs no offset. */
+.container {
+  padding-top: 88px;
+}
+
+body.fx-off .cp-topbar {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background: var(--surface);
+}
+
+/* ---- narrow screens: drop the low-value status lines, keep controls usable -- */
+@media (max-width: 900px) {
+  .cp-topbar .cp-hud-line:nth-child(2) {
+    display: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .cp-topbar {
+    gap: 6px;
+    padding: 8px 12px;
+    min-height: 52px;
+  }
+
+  .container {
+    padding-top: 80px;
+  }
+
+  /* drop the status readout, then let the control group push itself right.
+     The wrapper must NOT take 100% width: it is a flex item alongside the
+     two buttons, so a full-width wrapper would shove them off screen. */
+  .cp-topbar .cp-hud {
+    display: none;
+  }
+
+  .cp-topbar .cp-lang-wrapper {
+    width: auto;
+    min-width: 0;
+    margin-left: auto;
+    gap: 6px;
+  }
+
+  .cp-topbar .cp-lang-tag {
+    display: none;
+  }
+
+  .cp-topbar #languageSelector {
+    max-width: 128px;
+    padding: 0 26px 0 10px;
+  }
+
+  .cp-topbar #cpFxToggle,
+  .cp-topbar #cpThemeToggle {
+    flex: 0 0 auto;
+    padding: 0 10px;
+  }
+
+  .cp-topbar #cpFxLabel {
+    display: none;
+  }
+
+  .cp-topbar #languageSelector,
+  .cp-topbar #cpFxToggle,
+  .cp-topbar #cpThemeToggle {
+    height: 36px;
+    min-height: 36px;
+    max-height: 36px;
+  }
+}
 </style>
     </head>
     <body>
         <div class="matrix-bg"></div>
         <div class="matrix-code-rain" id="matrixCodeRain"></div>
-            <div class="cp-hud">
+            <!--cp:topbar-open--><nav class="cp-topbar">
+<div class="cp-hud">
                 <span class="cp-hud-line"><span class="cp-hud-label">SYS::</span> ${翻译值659.terminal}</span>
                 <span class="cp-hud-line"><span class="cp-hud-label">NODE::</span> NIGHT_CITY</span>
                 <span class="cp-hud-line"><span class="cp-hud-label">LINK::</span> SECURE / ENC</span>
@@ -1894,6 +2112,7 @@ body.fx-off::after {
                     <span id="cpThemeLabel">深色</span>
                 </button>
 <!--/cp:theme-button-->
+</nav><!--cp:topbar-close-->
         <div class="terminal">
             <div class="terminal-header">
                 <div class="terminal-buttons">
@@ -5228,72 +5447,6 @@ async function 处理订阅值(请求241, 用户240 = null) {
   --grid-line:  rgba(30,60,110,.05);
 }
 
-/* --------------------------------------------------------------------------
-   Theme skin switcher (button injected by the build; see parts/theme_*.js)
-   -------------------------------------------------------------------------- */
-.cp-theme-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 34px;
-  padding: 6px 12px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--surface-2);
-  color: var(--text-mut);
-  font-family: inherit;
-  font-size: 0.8125rem;
-  font-weight: 550;
-  line-height: 1.2;
-  cursor: pointer;
-  transition: background-color 180ms ease, border-color 180ms ease,
-    color 180ms ease;
-}
-
-.cp-theme-toggle:hover {
-  border-color: var(--accent);
-  background: var(--surface-3);
-  color: var(--text);
-}
-
-.cp-theme-toggle:active {
-  background: var(--surface-3);
-}
-
-.cp-theme-toggle:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-.cp-theme-icon {
-  flex: 0 0 auto;
-  width: 15px;
-  height: 15px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.7;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-/* dark shows the moon, light shows the sun */
-.cp-theme-toggle[data-current="dark"] .cp-theme-icon-sun,
-.cp-theme-toggle:not([data-current]) .cp-theme-icon-sun {
-  display: none;
-}
-
-.cp-theme-toggle[data-current="light"] .cp-theme-icon-moon {
-  display: none;
-}
-
-.cp-theme-toggle[data-current="light"] {
-  color: var(--text);
-}
-
-#cpThemeLabel {
-  white-space: nowrap;
-}
-
 /* ==========================================================================
    CFnew v3.1 — admin / settings page stylesheet (modern console)
    Depends on _tokens.css (no :root block here). Dual theme via data-theme.
@@ -7153,12 +7306,296 @@ button:disabled:hover {
     flex-direction: column;
   }
 }
+
+/* --------------------------------------------------------------------------
+   Theme skin switcher (button injected by the build; see parts/theme_*.js)
+   -------------------------------------------------------------------------- */
+.cp-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-2);
+  color: var(--text-mut);
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: 550;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: background-color 180ms ease, border-color 180ms ease,
+    color 180ms ease;
+}
+
+.cp-theme-toggle:hover {
+  border-color: var(--accent);
+  background: var(--surface-3);
+  color: var(--text);
+}
+
+.cp-theme-toggle:active {
+  background: var(--surface-3);
+}
+
+.cp-theme-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.cp-theme-icon {
+  flex: 0 0 auto;
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* dark shows the moon, light shows the sun */
+.cp-theme-toggle[data-current="dark"] .cp-theme-icon-sun,
+.cp-theme-toggle:not([data-current]) .cp-theme-icon-sun {
+  display: none;
+}
+
+.cp-theme-toggle[data-current="light"] .cp-theme-icon-moon {
+  display: none;
+}
+
+.cp-theme-toggle[data-current="light"] {
+  color: var(--text);
+}
+
+#cpThemeLabel {
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   Fixed top navigation / status bar
+   Wraps the status readout, language selector, FX toggle and theme toggle into
+   one fixed bar so they share a single baseline, a single control height and a
+   right-aligned row. Pure presentation: no element, id or handler is changed.
+   -------------------------------------------------------------------------- */
+.cp-topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 10px;
+  min-height: 56px;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: blur(16px) saturate(140%);
+}
+
+/* ---- status readout: compact single row, pinned left ---- */
+.cp-topbar .cp-hud {
+  position: static;
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 16px;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  text-align: left;
+  overflow: hidden;
+}
+
+.cp-topbar .cp-hud-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 34px;
+  white-space: nowrap;
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+.cp-topbar .cp-hud-label {
+  color: var(--text-dim);
+  font-weight: 600;
+}
+
+/* ---- controls: one right-aligned row, one shared height ---- */
+.cp-topbar .cp-lang-wrapper {
+  position: static;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  margin: 0 0 0 auto;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+
+/* every control in the bar is exactly the same height and shares one baseline */
+.cp-topbar .cp-lang-tag,
+.cp-topbar #languageSelector,
+.cp-topbar #cpFxToggle,
+.cp-topbar #cpThemeToggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: 34px;
+  min-height: 34px;
+  max-height: 34px;
+  margin: 0;
+  padding: 0 12px;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 550;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+.cp-topbar .cp-lang-tag {
+  padding: 0 10px;
+  border: 1px solid var(--border);
+  background: var(--surface-3);
+  color: var(--text-mut);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.cp-topbar #languageSelector {
+  padding: 0 30px 0 12px;
+  border: 1px solid var(--border-str);
+  background: var(--surface-2);
+  color: var(--text);
+  font-size: 12.5px;
+  cursor: pointer;
+}
+
+.cp-topbar #cpFxToggle,
+.cp-topbar #cpThemeToggle {
+  position: static;
+  flex: 0 0 auto;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text-mut);
+  font-size: 12.5px;
+  cursor: pointer;
+  box-shadow: none;
+  transition: background-color 180ms ease, border-color 180ms ease,
+    color 180ms ease;
+}
+
+.cp-topbar #cpFxToggle:hover,
+.cp-topbar #cpThemeToggle:hover {
+  border-color: var(--accent);
+  background: var(--surface-3);
+  color: var(--text);
+}
+
+/* the settings page renders the language select as a full-width control by
+   default; inside the bar it must hug its content instead */
+.cp-topbar #languageSelector {
+  width: auto;
+  max-width: 190px;
+}
+
+/* ---- keep page content clear of the fixed bar ----
+   The settings page is the only page with a .container, so this scopes the
+   offset to it. The terminal page already carries 64px of body padding and
+   centres its card, so it needs no offset. */
+.container {
+  padding-top: 88px;
+}
+
+body.fx-off .cp-topbar {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background: var(--surface);
+}
+
+/* ---- narrow screens: drop the low-value status lines, keep controls usable -- */
+@media (max-width: 900px) {
+  .cp-topbar .cp-hud-line:nth-child(2) {
+    display: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .cp-topbar {
+    gap: 6px;
+    padding: 8px 12px;
+    min-height: 52px;
+  }
+
+  .container {
+    padding-top: 80px;
+  }
+
+  /* drop the status readout, then let the control group push itself right.
+     The wrapper must NOT take 100% width: it is a flex item alongside the
+     two buttons, so a full-width wrapper would shove them off screen. */
+  .cp-topbar .cp-hud {
+    display: none;
+  }
+
+  .cp-topbar .cp-lang-wrapper {
+    width: auto;
+    min-width: 0;
+    margin-left: auto;
+    gap: 6px;
+  }
+
+  .cp-topbar .cp-lang-tag {
+    display: none;
+  }
+
+  .cp-topbar #languageSelector {
+    max-width: 128px;
+    padding: 0 26px 0 10px;
+  }
+
+  .cp-topbar #cpFxToggle,
+  .cp-topbar #cpThemeToggle {
+    flex: 0 0 auto;
+    padding: 0 10px;
+  }
+
+  .cp-topbar #cpFxLabel {
+    display: none;
+  }
+
+  .cp-topbar #languageSelector,
+  .cp-topbar #cpFxToggle,
+  .cp-topbar #cpThemeToggle {
+    height: 36px;
+    min-height: 36px;
+    max-height: 36px;
+  }
+}
 </style>
     </head>
 <body>
         <div class="matrix-bg"></div>
         <div class="matrix-code-rain" id="matrixCodeRain"></div>
-            <div class="cp-hud">
+            <!--cp:topbar-open--><nav class="cp-topbar">
+<div class="cp-hud">
                 <span class="cp-hud-line"><span class="cp-hud-label">SYS::</span> ${翻译值.terminal}</span>
                 <span class="cp-hud-line"><span class="cp-hud-label">NODE::</span> NIGHT_CITY</span>
                 <span class="cp-hud-line"><span class="cp-hud-label">LINK::</span> SECURE / ENC</span>
@@ -7186,6 +7623,7 @@ button:disabled:hover {
                     <span id="cpThemeLabel">深色</span>
                 </button>
 <!--/cp:theme-button-->
+</nav><!--cp:topbar-close-->
         <div class="container">
             <div class="header">
                     <h1 class="title cp-glitch" data-text="${翻译值.title}">${翻译值.title}</h1>
