@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>CFnew</title>
+<style>
+  :root { color-scheme: dark; }
+  body {
+    margin: 0; min-height: 100vh; display: grid; place-items: center;
+    background: #0B1120; color: #E8EEF7; padding: 24px;
+    font-family: system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+    line-height: 1.6;
+  }
+  .box {
+    max-width: 34rem; padding: 28px 32px; border: 1px solid #26344B;
+    border-radius: 16px; background: #131C2E;
+  }
+  h1 { margin: 0 0 12px; font-size: 1.125rem; font-weight: 650; }
+  p { margin: 0 0 10px; color: #97A6BC; font-size: 0.9375rem; }
+  code { background: #1A2537; padding: 2px 6px; border-radius: 6px; font-size: 0.875rem; }
+</style>
+</head>
+<body>
+  <div class="box">
+    <h1>这个文件不是站点首页</h1>
+    <p>
+      本项目的全部请求都由根目录的 <code>_worker.js</code>（Cloudflare Pages 高级模式）处理，
+      正常情况下你永远不会看到这个页面。
+    </p>
+    <p>
+      它之所以存在，是因为 Cloudflare Pages 在自动识别构建配置时，需要输出目录里
+      至少有一个静态文件（html / css / js）。仅有 <code>_worker.js</code> 时，
+      自检会报 <code>Could not detect a directory containing static files</code>。
+    </p>
+    <p>请直接访问你的站点地址（访问路径取决于你在 <code>_worker.js</code> 里配置的 UUID 或自定义路径）。</p>
+  </div>
+</body>
+</html>
