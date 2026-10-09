@@ -18,6 +18,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { loadPatches, applyPatches } from './patch.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const SRC = path.join(HERE, 'src');
@@ -49,6 +50,7 @@ const themeSharedCss = trim(readSrc('theme-shared.css'));
 const themeButton = trim(readSrc('theme-button.html'));
 const themeBoot = trim(readSrc('theme-boot.html'));
 const themeJs = trim(readSrc('theme.js'));
+const PATCHES = loadPatches(path.join(HERE, 'patches'));
 const topbarCss = trim(readSrc('topbar.css'));
 
 const BACKTICK = String.fromCharCode(96);
@@ -132,6 +134,14 @@ out.push(...lines.slice(setStyleClose + 1, setBodyOpen));
 out.push(...nl(bodyHtml));
 out.push(...lines.slice(setScriptOpen));
 let result = out.join('\n');
+
+// --------------------------------------------------------------- patches --
+// Declared, auditable page-JS fixes. validate.mjs recomputes the same
+// expectation, so an UNDECLARED change to page logic still fails the build.
+if (PATCHES.length) {
+  console.log('page-JS patches: ' + PATCHES.length);
+  result = applyPatches(result, PATCHES, console.log).text;
+}
 
 // ------------------------------------------------------------- inject UI --
 function wrap(name, payload) {

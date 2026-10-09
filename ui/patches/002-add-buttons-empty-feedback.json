@@ -1,0 +1,8 @@
+{
+  "name": "add-buttons-empty-feedback",
+  "target": "settings",
+  "description": "覆盖/追加添加：勾选项里没有成功结果时给出明确提示，而不是静默返回",
+  "find": "      const 已选项目列表20024 = 获取已选项目();\n      if (!已选项目列表20024 || 已选项目列表20024.length === 0) return;",
+  "replace": "      const 已选项目列表20024 = 获取已选项目();\n      if (!已选项目列表20024) return;\n      if (已选项目列表20024.length === 0) {\n        显示状态('${是否值236 ? 'نتیجه معتبری برای افزودن وجود ندارد' : '没有可添加的有效结果，请先勾选测试成功的项'}', 'error');\n        return;\n      }",
+  "appliedWhen": "没有可添加的有效结果"
+}

@@ -15,6 +15,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { loadPatches, applyPatches } from './patch.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.dirname(HERE);
@@ -77,12 +78,27 @@ try {
   fail('generated Worker is not valid JavaScript:\n' + String(e.stderr || e.message).split('\n').slice(0, 8).join('\n'));
 }
 
-// 2. page logic must survive the build byte for byte
+// 2. page logic must be exactly upstream + the DECLARED patches, nothing else.
+//    Recomputing the expectation here is what keeps declarative patching safe:
+//    an undeclared edit to page logic still fails.
+const PATCHES = loadPatches(path.join(HERE, 'patches'));
 if (sameSource) {
   caution('--upstream and --built point at the same file: page-logic comparison skipped.');
 } else {
   for (const key of ['terminal', 'settings']) {
-    if (B[key].js !== U[key].js) fail('the ' + key + ' page script changed - the build must never rewrite page logic');
+    let expected;
+    const forPage = PATCHES.filter((p) => !p.target || p.target === key);
+    try {
+      expected = applyPatches(U[key].js, forPage).text;
+    } catch (e) {
+      fail('could not apply ui/patches to the upstream ' + key + ' page script: ' + e.message);
+      continue;
+    }
+    if (B[key].js === U[key].js && forPage.length) {
+      fail('the ' + key + ' page script is unchanged but ' + forPage.length + ' patch(es) target it - the build did not apply them');
+    } else if (B[key].js !== expected) {
+      fail('the ' + key + ' page script is neither upstream nor upstream+patches. Only declared patches in ui/patches/ may change page logic.');
+    }
   }
 }
 

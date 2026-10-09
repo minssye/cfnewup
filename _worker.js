@@ -6625,6 +6625,69 @@ button:disabled:hover {
 }
 
 /* --------------------------------------------------------------------------
+   Latency test result rows.
+   The page script now renders failures too (see ui/patches/), so the row has
+   three states to express: measurable, failed, and the address/latency parts.
+   -------------------------------------------------------------------------- */
+.latency-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.latency-item input[type="checkbox"] {
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.latency-item input[type="checkbox"]:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.latency-item-body {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.latency-host {
+  color: var(--text);
+  font-weight: 550;
+}
+
+.latency-colo {
+  color: var(--info);
+}
+
+.latency-ms {
+  color: var(--ok);
+  font-weight: 600;
+}
+
+.latency-err {
+  color: var(--err);
+}
+
+/* a failed probe stays visible but clearly reads as "not usable" */
+.latency-item-fail {
+  opacity: 0.78;
+  background: color-mix(in srgb, var(--err) 6%, var(--surface)) !important;
+}
+
+.latency-item-fail .latency-host {
+  color: var(--text-mut);
+}
+
+.latency-item-ok:hover {
+  background: var(--surface-3) !important;
+}
+
+/* --------------------------------------------------------------------------
    13c. Normalise styles that the page JS writes directly onto elements it
    creates (cssText / style.backgroundColor). These cannot be reached by the
    markup classes, so they are pinned to design tokens here. No page logic is
@@ -9478,12 +9541,11 @@ document.addEventListener('DOMContentLoaded', function () {
         };
       }
       function 渲染结果(结果20046, 索引20045, 值值20044 = true) {
-        // 只展示在线优选成功的结果，失败/超时的不再显示
-        if (!结果20046.success) {
-          return null;
-        }
+        // 失败/超时也照样列出来：否则全部探测失败时列表一片空白，用户无从判断。
+        // 失败项置灰且复选框禁用，因此不会被全选、覆盖添加或追加添加选中。
+        const 是否成功 = !!结果20046.success;
         const 结果项目 = document.createElement('div');
-        结果项目.style.cssText = 'display: flex; align-items: center; padding: 8px; border-bottom: 1px solid #003300; gap: 10px;';
+        结果项目.className = 'latency-item ' + (是否成功 ? 'latency-item-ok' : 'latency-item-fail');
         结果项目.dataset.index = 索引20045;
         结果项目.dataset.colo = 结果20046.colo || '';
         if (!值值20044) {
@@ -9491,15 +9553,18 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         const 复选框20043 = document.createElement('input');
         复选框20043.type = 'checkbox';
-        复选框20043.checked = true;
-        复选框20043.disabled = false;
+        复选框20043.checked = 是否成功;
+        复选框20043.disabled = !是否成功;
         复选框20043.dataset.index = 索引20045;
-        复选框20043.style.cssText = 'width: 18px; height: 18px; cursor: pointer;';
         const 本地值20042 = document.createElement('div');
-        本地值20042.style.cssText = 'flex: 1; font-family: monospace; font-size: 13px;';
+        本地值20042.className = 'latency-item-body';
         const 机房名称20041 = 结果20046.colo ? 获取机房名称(结果20046.colo) : '';
-        const 机房显示 = 机房名称20041 ? ' <span style="color: #00aaff;">[' + 机房名称20041 + ']</span>' : '';
-        本地值20042.innerHTML = '<span style="color: #00f0ff;">' + 结果20046.host + ':' + 结果20046.port + '</span>' + 机房显示 + ' <span style="color: #ffff00;">' + 结果20046.latency + 'ms</span>';
+        const 机房显示 = 机房名称20041 ? ' <span class="latency-colo">[' + 机房名称20041 + ']</span>' : '';
+        const 地址显示 = '<span class="latency-host">' + 结果20046.host + ':' + 结果20046.port + '</span>';
+        const 结果显示 = 是否成功
+          ? 地址显示 + 机房显示 + ' <span class="latency-ms">' + 结果20046.latency + 'ms</span>'
+          : 地址显示 + ' <span class="latency-err">' + (结果20046.error || '${是否值236 ? 'ناموفق' : '失败'}') + '</span>';
+        本地值20042.innerHTML = 结果显示;
         结果项目.appendChild(复选框20043);
         结果项目.appendChild(本地值20042);
         结果列表列表.appendChild(结果项目);
@@ -9587,7 +9652,11 @@ document.addEventListener('DOMContentLoaded', function () {
   if (覆盖已选值) {
     覆盖已选值.addEventListener('click', async function () {
       const 已选项目列表20024 = 获取已选项目();
-      if (!已选项目列表20024 || 已选项目列表20024.length === 0) return;
+      if (!已选项目列表20024) return;
+      if (已选项目列表20024.length === 0) {
+        显示状态('${是否值236 ? 'نتیجه معتبری برای افزودن وجود ندارد' : '没有可添加的有效结果，请先勾选测试成功的项'}', 'error');
+        return;
+      }
       const 值输入20023 = document.getElementById('yx');
       const 新值20022 = 已选项目列表20024.join(',');
       值输入20023.value = 新值20022;

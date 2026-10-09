@@ -17,6 +17,8 @@
 ui/
 ├─ build.mjs              构建脚本（可移植、幂等）
 ├─ validate.mjs           契约校验（安全阀）
+├─ patch.mjs              页面 JS 补丁应用器
+├─ patches/               页面 JS 补丁（每个 bug 一个声明式 JSON）
 └─ src/
    ├─ tokens.css          设计令牌：深浅双主题色板、圆角、阴影
    ├─ terminal.css        终端 / 登录页样式
@@ -93,6 +95,50 @@ node ui/validate.mjs --upstream upstream_worker.js --built _worker.js
 - 不含 `${` —— 否则会被**服务端求值**（只有 `body.html` 例外，那里的 `${...}` 是页面自己的模板占位符）。
 
 违反任一条，构建直接报错退出。
+
+## 页面 JS 补丁（受控修改）
+
+页面逻辑默认**一字不改**。但有些 bug 确实就在页面逻辑里，必须能修 —— 所以引入受控补丁。
+
+每个补丁是 `ui/patches/` 下的一个 JSON：
+
+```json
+{
+  "name": "latency-render-failures",
+  "target": "settings",
+  "description": "失败/超时的结果也渲染出来",
+  "find": "……上游原文（必须逐字节匹配且唯一）……",
+  "replace": "……替换后的代码……",
+  "appliedWhen": "……一段只可能出现在已应用结果里的标记……"
+}
+```
+
+- `target`：`settings` / `terminal`；校验时只对该页生效
+- `find` 匹配 0 次且 `appliedWhen` 也不在 → **构建直接报错**（上游改了这段代码，补丁需要更新，而不是静默失效）
+- `find` 匹配 0 次但 `appliedWhen` 在 → 视为已应用，跳过（保证幂等）
+- `find` 匹配 ≥2 次 → 报错（要求唯一）
+
+### 为什么这样是安全的
+
+`validate.mjs` 会**独立重算**期望值：`上游页面 JS + 该页补丁`，再与产物逐字节比对。所以：
+
+- 任何**未声明**的页面逻辑改动 → 校验失败，拒绝提交
+- 补丁只作用于声明的那一页，不会误伤另一页
+- 补丁失效（上游改掉对应代码）→ 构建阶段就报错
+
+### 现有补丁
+
+| 补丁 | 作用 |
+|---|---|
+| `001-latency-render-failures` | 延迟测试：失败/超时的结果也列出来（置灰 + 禁用勾选 + 显示失败原因） |
+| `002-add-buttons-empty-feedback` | 覆盖/追加添加：勾选项里没有成功结果时给出提示，而不是静默返回 |
+
+### 新增一个补丁
+
+1. 从上游文件或产物里**复制原文**，确保逐字节一致
+2. 写进 `ui/patches/NNN-name.json`；`replace` 里不能出现反引号（会截断 Worker 的模板字符串）
+3. `${...}` 在这里是**合法**的 —— Worker 会在服务端求值，这正是页面做中/波斯语 i18n 的方式
+4. 跑 `node ui/build.mjs` 和 `node ui/validate.mjs` 确认通过
 
 ## 安全阀（重要）
 

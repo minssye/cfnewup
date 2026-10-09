@@ -616,3 +616,67 @@ button:disabled:hover {
 [style*="#fff200"], [style*="rgb(255, 242, 0)"] {
   color: var(--accent) !important;
 }
+
+/* --------------------------------------------------------------------------
+   Latency test result rows.
+   The page script now renders failures too (see ui/patches/), so the row has
+   three states to express: measurable, failed, and the address/latency parts.
+   -------------------------------------------------------------------------- */
+.latency-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.latency-item input[type="checkbox"] {
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.latency-item input[type="checkbox"]:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.latency-item-body {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.latency-host {
+  color: var(--text);
+  font-weight: 550;
+}
+
+.latency-colo {
+  color: var(--info);
+}
+
+.latency-ms {
+  color: var(--ok);
+  font-weight: 600;
+}
+
+.latency-err {
+  color: var(--err);
+}
+
+/* a failed probe stays visible but clearly reads as "not usable" */
+.latency-item-fail {
+  opacity: 0.78;
+  background: color-mix(in srgb, var(--err) 6%, var(--surface)) !important;
+}
+
+.latency-item-fail .latency-host {
+  color: var(--text-mut);
+}
+
+.latency-item-ok:hover {
+  background: var(--surface-3) !important;
+}
+
