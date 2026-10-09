@@ -5,7 +5,7 @@
 
 ## 为什么需要它
 
-仓库的 GitHub Action 每 6 小时从上游 `byJoey/cfnew` 拉取最新 `Pages.zip`，解压后
+仓库的 GitHub Action 每天从上游 `byJoey/cfnew` 拉取最新 `Pages.zip`，解压后
 会**直接覆盖 `_worker.js`**。如果不做处理，上游一发新版，重设计的界面就全没了。
 
 现在的流程是：拉上游 → **构建（重新套用 UI）** → **校验** → 通过才提交。
@@ -194,8 +194,8 @@ FAILED (1) - refusing to publish this build
 
 | 工作流 | 触发 | 作用 |
 |---|---|---|
-| `sync-from-cfnew.yml` | 每 6 小时 / 手动 | 拉上游 → 构建 → 校验 → 通过才提交 |
-| `ui-check.yml` | 推送或 PR 触及 `ui/**` 或 `_worker.js` | 立刻校验，不必等 6 小时 |
+| `sync-from-cfnew.yml` | 每天 0 点（UTC）/ 手动 | 拉上游 → 构建 → 校验 → 通过才提交 |
+| `ui-check.yml` | 推送或 PR 触及 `ui/**` 或 `_worker.js` | 立刻校验，不必等下一次同步 |
 
 `ui-check.yml` 做两件事：
 
